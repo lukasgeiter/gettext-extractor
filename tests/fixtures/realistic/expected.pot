@@ -1,6 +1,10 @@
 msgid ""
 msgstr "Content-Type: text/plain;\n"
 
+#: tests/fixtures/realistic/components/navigation.tsx:15
+msgid "☃★☺üöäëéíèàâ"
+msgstr ""
+
 #: tests/fixtures/realistic/legacy.js:8
 msgid "Account"
 msgstr ""

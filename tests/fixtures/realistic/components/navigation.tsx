@@ -11,6 +11,9 @@ export class Navigation extends React.Component<any, undefined> {
                     <UISrefActive class="active">
                         <UISref to="organisations"><a>{getText('Organisations')}</a></UISref>
                     </UISrefActive>
+                    <UISrefActive class="active">
+                        <UISref to="unicode"><a>{getText('☃★☺üöäëéíèàâ')}</a></UISref>
+                    </UISrefActive>
                 </nav>
             </div>
         );

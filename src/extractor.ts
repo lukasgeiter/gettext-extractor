@@ -55,7 +55,7 @@ export class GettextExtractor {
     }
 
     public toPotString(): string {
-        return gettextParser.po.compile({translations: this.toGettextMessages()}).toString();
+        return gettextParser.po.compile({translations: this.toGettextMessages(), charset: 'UTF-8'}).toString();
     }
 
     public savePotFile(fileName: string): void {
