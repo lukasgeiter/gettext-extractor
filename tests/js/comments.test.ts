@@ -75,8 +75,8 @@ describe('JS: comments', () => {
             }</h1>;
         `;
 
-    function getComments(source: string): string[] {
-        parser.parseString(source);
+    function getComments(source: string, fileName?: string): string[] {
+        parser.parseString(source, fileName);
         return messages.pop().comments;
     }
 
@@ -185,14 +185,14 @@ describe('JS: comments', () => {
         });
 
         test('jsx block', () => {
-            expect(getComments(JSX_BLOCK)).toEqual([
+            expect(getComments(JSX_BLOCK, 'foo.jsx')).toEqual([
                 'Leading block comment on same line',
                 'Trailing block comment'
             ]);
         });
 
         test('jsx line', () => {
-            expect(getComments(JSX_LINE)).toEqual([
+            expect(getComments(JSX_LINE, 'foo.jsx')).toEqual([
                 'Leading line comment',
                 'Trailing line comment'
             ]);
@@ -273,14 +273,14 @@ describe('JS: comments', () => {
         });
 
         test('jsx block', () => {
-            expect(getComments(JSX_BLOCK)).toEqual([
+            expect(getComments(JSX_BLOCK, 'foo.jsx')).toEqual([
                 'Leading block comment on same line',
                 'Trailing block comment'
             ]);
         });
 
         test('jsx line', () => {
-            expect(getComments(JSX_LINE)).toEqual([
+            expect(getComments(JSX_LINE, 'foo.jsx')).toEqual([
                 'Trailing line comment'
             ]);
         });
@@ -353,13 +353,13 @@ describe('JS: comments', () => {
         });
 
         test('jsx block', () => {
-            expect(getComments(JSX_BLOCK)).toEqual([
+            expect(getComments(JSX_BLOCK, 'foo.jsx')).toEqual([
                 'Trailing block comment'
             ]);
         });
 
         test('jsx line', () => {
-            expect(getComments(JSX_LINE)).toEqual([
+            expect(getComments(JSX_LINE, 'foo.jsx')).toEqual([
                 'Trailing line comment'
             ]);
         });
@@ -446,13 +446,13 @@ describe('JS: comments', () => {
         });
 
         test('jsx block', () => {
-            expect(getComments(JSX_BLOCK)).toEqual([
+            expect(getComments(JSX_BLOCK, 'foo.jsx')).toEqual([
                 'Leading block comment on same line'
             ]);
         });
 
         test('jsx line', () => {
-            expect(getComments(JSX_LINE)).toEqual([
+            expect(getComments(JSX_LINE, 'foo.jsx')).toEqual([
                 'Leading line comment'
             ]);
         });
@@ -523,13 +523,13 @@ describe('JS: comments', () => {
         });
 
         test('jsx block', () => {
-            expect(getComments(JSX_BLOCK)).toEqual([
+            expect(getComments(JSX_BLOCK, 'foo.jsx')).toEqual([
                 'Leading block comment on same line'
             ]);
         });
 
         test('jsx line', () => {
-            expect(getComments(JSX_LINE)).toBeUndefined();
+            expect(getComments(JSX_LINE, 'foo.jsx')).toBeUndefined();
         });
     });
 
@@ -608,11 +608,11 @@ describe('JS: comments', () => {
         });
 
         test('jsx block', () => {
-            expect(getComments(JSX_BLOCK)).toBeUndefined();
+            expect(getComments(JSX_BLOCK, 'foo.jsx')).toBeUndefined();
         });
 
         test('jsx line', () => {
-            expect(getComments(JSX_LINE)).toEqual([
+            expect(getComments(JSX_LINE, 'foo.jsx')).toEqual([
                 'Leading line comment'
             ]);
         });

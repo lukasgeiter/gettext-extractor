@@ -47,7 +47,7 @@ export class JsParser extends Parser<IJsExtractorFunction> {
     }
 
     protected parse(source: string, fileName: string): void {
-        let sourceFile = ts.createSourceFile(fileName, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+        let sourceFile = ts.createSourceFile(fileName, source, ts.ScriptTarget.Latest, true);
         let messages = this.parseNode(sourceFile, sourceFile);
         for (let message of messages) {
             this.builder.addMessage(message);
