@@ -1,7 +1,8 @@
 import * as ts from 'typescript';
 
-import { IAddMessageCallback, IMessageData, IJsExtractorFunction } from './parser';
+import { IJsExtractorFunction } from './parser';
 import { JsCommentUtils, ICommentOptions } from './comments';
+import { IAddMessageCallback, IMessageData } from '../parser';
 import { Validate } from '../utils/validate';
 
 export interface IArgumentIndexMapping {

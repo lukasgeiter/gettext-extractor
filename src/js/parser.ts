@@ -1,19 +1,8 @@
 import * as ts from 'typescript';
 
+import { Parser, IMessageData, IAddMessageCallback } from '../parser';
 import { GettextExtractor } from '../extractor';
 import { IMessage } from '../builder';
-import { Parser } from '../parser';
-
-export interface IMessageData {
-    text: string;
-    textPlural?: string;
-    context?: string;
-    lineNumber?: number;
-    fileName?: string;
-    comments?: string[];
-}
-
-export type IAddMessageCallback = (data: IMessageData) => void;
 
 export type IJsExtractorFunction = (node: ts.Node, sourceFile: ts.SourceFile, addMessage: IAddMessageCallback) => void;
 

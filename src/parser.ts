@@ -5,6 +5,17 @@ import { GettextExtractor, IGettextExtractorStats } from './extractor';
 import { CatalogBuilder } from './builder';
 import { Validate } from './utils/validate';
 
+export interface IMessageData {
+    text: string;
+    textPlural?: string;
+    context?: string;
+    lineNumber?: number;
+    fileName?: string;
+    comments?: string[];
+}
+
+export type IAddMessageCallback = (data: IMessageData) => void;
+
 export abstract class Parser<TExtractorFunction extends Function> {
 
     constructor(
