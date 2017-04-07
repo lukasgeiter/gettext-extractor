@@ -44,8 +44,8 @@ export abstract class JsExtractors {
         };
     }
 
-    public static methodCall(instanceName: string, functionName: string, options: IMethodCallOptions): IJsExtractorFunction {
-        Validate.required.nonEmptyString({instanceName, functionName});
+    public static methodCall(instanceName: string, methodName: string, options: IMethodCallOptions): IJsExtractorFunction {
+        Validate.required.nonEmptyString({instanceName, methodName});
         JsExtractors.validateOptions(options);
 
         return (node: ts.Node, sourceFile: ts.SourceFile, addMessage: IAddMessageCallback) => {
@@ -64,10 +64,10 @@ export abstract class JsExtractors {
                     if (propertyAccessExpression.expression.kind === ts.SyntaxKind.Identifier
                         && propertyAccessExpression.name.kind === ts.SyntaxKind.Identifier) {
                         let instanceIdentifier = <ts.Identifier>propertyAccessExpression.expression;
-                        let memberIdentifier = <ts.Identifier>propertyAccessExpression.name;
+                        let methodIdentifier = <ts.Identifier>propertyAccessExpression.name;
 
                         if (instanceIdentifier.text === instanceName
-                            && memberIdentifier.text === functionName) {
+                            && methodIdentifier.text === methodName) {
                             let message = this.extractArguments(callExpression, options.arguments);
                             if (message) {
                                 message.comments = JsCommentUtils.extractComments(callExpression, sourceFile, options.comments);

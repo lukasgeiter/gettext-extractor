@@ -487,14 +487,14 @@ extractor
 *function* · An [Extractor Function](#extractor-functions) that extracts function calls.
 
 
-#### `methodCall(instanceName, functionName, options)`
+#### `methodCall(instanceName, methodName, options)`
 
 ##### Parameters
 
 | Name | Type |  Details |
 | --- | --- | --- |
 | `instanceName` | *string* | **Required** · Name of the instance |
-| `functionName` | *string* | **Required** · Name of the function |
+| `methodName` | *string* | **Required** · Name of the method |
 | `options` | *object* | Options to configure the extractor function |
 | →&nbsp;`arguments` | *object* | **Required** · [Argument Mapping](#argument-mapping) |
 | →&nbsp;`comments` | *object* | [Comment Options](#comment-options) |

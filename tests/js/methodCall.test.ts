@@ -2,7 +2,7 @@ import { CatalogBuilder, IMessage } from '../../src/builder';
 import { JsExtractors } from '../../src/js/extractors';
 import { JsParser } from '../../src/js/parser';
 
-describe('JS: Member Call Extractor', () => {
+describe('JS: Method Call Extractor', () => {
 
     function standardSingular(): JsParser {
         return new JsParser(builder, [
@@ -307,22 +307,22 @@ describe('JS: Member Call Extractor', () => {
             }).toThrowError(`Argument 'instanceName' must be a non-empty string`);
         });
 
-        test('functionName: (none)', () => {
+        test('methodName: (none)', () => {
             expect(() => {
                 (<any>JsExtractors.methodCall)('service');
-            }).toThrowError(`Missing argument 'functionName'`);
+            }).toThrowError(`Missing argument 'methodName'`);
         });
 
-        test('functionName: null', () => {
+        test('methodName: null', () => {
             expect(() => {
                 (<any>JsExtractors.methodCall)('service', null);
-            }).toThrowError(`Argument 'functionName' must be a non-empty string`);
+            }).toThrowError(`Argument 'methodName' must be a non-empty string`);
         });
 
-        test('functionName: wrong type', () => {
+        test('methodName: wrong type', () => {
             expect(() => {
                 (<any>JsExtractors.methodCall)('service', 42);
-            }).toThrowError(`Argument 'functionName' must be a non-empty string`);
+            }).toThrowError(`Argument 'methodName' must be a non-empty string`);
         });
 
         test('options: (none)', () => {
