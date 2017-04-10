@@ -1,102 +1,11 @@
 import { CatalogBuilder, IMessage } from '../../src/builder';
-import { JsExtractors } from '../../src/js/extractors';
+import { IMethodCallOptions, JsExtractors } from '../../src/js/extractors';
 import { JsParser } from '../../src/js/parser';
 
 describe('JS: Method Call Extractor', () => {
 
-    function standardSingular(): JsParser {
-        return new JsParser(builder, [
-            JsExtractors.methodCall('service', 'getText', {
-                arguments: {
-                    text: 0,
-                    context: 1
-                }
-            })
-        ]);
-    }
-
-    function standardPlural(): JsParser {
-        return new JsParser(builder, [
-            JsExtractors.methodCall('service', 'getPlural', {
-                arguments: {
-                    text: 1,
-                    textPlural: 2,
-                    context: 3
-                }
-            })
-        ]);
-    }
-
-    function noContextSingular(): JsParser {
-        return new JsParser(builder, [
-            JsExtractors.methodCall('service', 'getText', {
-                arguments: {
-                    text: 0
-                }
-            })
-        ]);
-    }
-
-    function noContextPlural(): JsParser {
-        return new JsParser(builder, [
-            JsExtractors.methodCall('service', 'getPlural', {
-                arguments: {
-                    text: 1,
-                    textPlural: 2
-                }
-            })
-        ]);
-    }
-
-    function weirdSingular(): JsParser {
-        return new JsParser(builder, [
-            JsExtractors.methodCall('service', 'getText', {
-                arguments: {
-                    text: 2,
-                    context: 0
-                }
-            })
-        ]);
-    }
-
-    function weirdPlural(): JsParser {
-        return new JsParser(builder, [
-            JsExtractors.methodCall('service', 'getPlural', {
-                arguments: {
-                    text: 2,
-                    textPlural: 4,
-                    context: 0
-                }
-            })
-        ]);
-    }
-
-    function ignoreMemberInstanceSingular(): JsParser {
-        return new JsParser(builder, [
-            JsExtractors.methodCall('service', 'getText', {
-                ignoreMemberInstance: true,
-                arguments: {
-                    text: 0,
-                    context: 1
-                }
-            })
-        ]);
-    }
-
-    function ignoreMemberInstancePlural(): JsParser {
-        return new JsParser(builder, [
-            JsExtractors.methodCall('service', 'getPlural', {
-                ignoreMemberInstance: true,
-                arguments: {
-                    text: 1,
-                    textPlural: 2,
-                    context: 3
-                }
-            })
-        ]);
-    }
-
     let builder: CatalogBuilder,
+        parser: JsParser,
         messages: IMessage[];
 
     beforeEach(() => {
@@ -109,182 +18,238 @@ describe('JS: Method Call Extractor', () => {
         };
     });
 
-    describe('singular', () => {
-        test('basic call', () => {
-            standardSingular().parseString(`service.getText('Foo');`);
-
-            expect(messages).toEqual([
-                {
-                    text: 'Foo'
-                }
+    describe('extraction', () => {
+        function createParser(instanceName: string, methodName: string, options: IMethodCallOptions): JsParser {
+            return new JsParser(builder, [
+                JsExtractors.methodCall(instanceName, methodName, options)
             ]);
+        }
+
+        describe('singular', () => {
+            beforeEach(() => {
+                parser = createParser('service', 'getText', {
+                    arguments: {
+                        text: 0,
+                        context: 1
+                    }
+                });
+            });
+
+            test('text only', () => {
+                parser.parseString(`service.getText('Foo');`);
+                parser.parseString(`service.getText(Bar);`);
+
+                expect(messages).toEqual([
+                    {
+                        text: 'Foo'
+                    }
+                ]);
+            });
+
+            test('with context', () => {
+                parser.parseString(`service.getText('Foo', 'Context');`);
+                parser.parseString(`service.getText('Bar', Context);`);
+
+                expect(messages).toEqual([
+                    {
+                        text: 'Foo',
+                        context: 'Context'
+                    },
+                    {
+                        text: 'Bar'
+                    }
+                ]);
+            });
+
+            test('no context argument mapping', () => {
+                parser = createParser('service', 'getText', {
+                    arguments: {
+                        text: 0
+                    }
+                });
+
+                parser.parseString(`service.getText('Foo', 'Context');`);
+
+                expect(messages).toEqual([
+                    {
+                        text: 'Foo'
+                    }
+                ]);
+            });
+
+            test('weird argument mapping', () => {
+                parser = createParser('service', 'getText', {
+                    arguments: {
+                        text: 2,
+                        context: 0
+                    }
+                });
+
+                parser.parseString(`service.getText('Context', something, 'Foo');`);
+
+                expect(messages).toEqual([
+                    {
+                        text: 'Foo',
+                        context: 'Context'
+                    }
+                ]);
+            });
         });
 
-        test('context', () => {
-            standardSingular().parseString(`service.getText('Foo', 'Context');`);
+        describe('plural', () => {
+            beforeEach(() => {
+                parser = createParser('service', 'getPlural', {
+                    arguments: {
+                        text: 1,
+                        textPlural: 2,
+                        context: 3
+                    }
+                });
+            });
 
-            expect(messages).toEqual([
-                {
-                    text: 'Foo',
-                    context: 'Context'
-                }
-            ]);
-        });
+            test('text only', () => {
+                parser.parseString(`service.getPlural(1, 'Foo', 'Foos');`);
+                parser.parseString(`service.getPlural(1, Bar, 'Bars');`);
+                parser.parseString(`service.getPlural(1, 'Bar', Bars);`);
 
-        test('member method', () => {
-            standardSingular().parseString(`this.getText('Foo');`);
+                expect(messages).toEqual([
+                    {
+                        text: 'Foo',
+                        textPlural: 'Foos'
+                    }
+                ]);
+            });
 
-            expect(messages).toEqual([]);
-        });
+            test('with context', () => {
+                parser.parseString(`service.getPlural(1, 'Foo', 'Foos', 'Context');`);
+                parser.parseString(`service.getPlural(1, 'Bar', 'Bars', Context);`);
 
-        test('member instance method', () => {
-            standardSingular().parseString(`this.service.getText('Foo');`);
+                expect(messages).toEqual([
+                    {
+                        text: 'Foo',
+                        textPlural: 'Foos',
+                        context: 'Context'
+                    },
+                    {
+                        text: 'Bar',
+                        textPlural: 'Bars'
+                    }
+                ]);
+            });
 
-            expect(messages).toEqual([
-                {
-                    text: 'Foo'
-                }
-            ]);
-        });
+            test('no context argument mapping', () => {
+                parser = createParser('service', 'getPlural', {
+                    arguments: {
+                        text: 1,
+                        textPlural: 2
+                    }
+                });
 
-        test('member instance method (ignoreMemberInstance)', () => {
-            ignoreMemberInstanceSingular().parseString(`this.service.getText('Foo');`);
+                parser.parseString(`service.getPlural(1, 'Foo', 'Foos', 'Context');`);
 
-            expect(messages).toEqual([]);
-        });
+                expect(messages).toEqual([
+                    {
+                        text: 'Foo',
+                        textPlural: 'Foos'
+                    }
+                ]);
+            });
 
-        test('function call', () => {
-            standardSingular().parseString(`getText('Foo');`);
+            test('weird argument mapping', () => {
+                parser = createParser('service', 'getPlural', {
+                    arguments: {
+                        text: 2,
+                        textPlural: 4,
+                        context: 0
+                    }
+                });
 
-            expect(messages).toEqual([]);
-        });
+                parser.parseString(`service.getPlural('Context', something, 'Foo', something, 'Foos');`);
 
-        test('non-literal parameter', () => {
-            standardSingular().parseString(`service.getText(foo);`);
-
-            expect(messages).toEqual([]);
-        });
-
-        test('case sensitivity', () => {
-            standardSingular().parseString(`service.gettext('Foo');`);
-
-            expect(messages).toEqual([]);
-        });
-
-        test('no context argument mapping', () => {
-            noContextSingular().parseString(`service.getText('Foo', 'Context?');`);
-
-            expect(messages).toEqual([
-                {
-                    text: 'Foo'
-                }
-            ]);
-        });
-
-        test('weird argument mapping', () => {
-            weirdSingular().parseString(`service.getText('Context', something, 'Foo');`);
-
-            expect(messages).toEqual([
-                {
-                    text: 'Foo',
-                    context: 'Context'
-                }
-            ]);
+                expect(messages).toEqual([
+                    {
+                        text: 'Foo',
+                        textPlural: 'Foos',
+                        context: 'Context'
+                    }
+                ]);
+            });
         });
     });
 
-    describe('plural', () => {
-        test('basic call', () => {
-            standardPlural().parseString(`service.getPlural(1, 'Foo', 'Foos');`);
+    describe('matching', () => {
+        function createParser(instanceName: string, methodName: string, ignoreMemberInstance: boolean = undefined): JsParser {
+            return new JsParser(builder, [
+                JsExtractors.methodCall(instanceName, methodName, {
+                    arguments: {
+                        text: 0
+                    },
+                    ignoreMemberInstance: ignoreMemberInstance
+                })
+            ]);
+        }
+
+        test('standard use', () => {
+            parser = createParser('service', 'getText');
+
+            parser.parseString(`service.getText('Foo');`);
+            parser.parseString(`this.service.getText('Bar');`);
 
             expect(messages).toEqual([
                 {
-                    text: 'Foo',
-                    textPlural: 'Foos'
+                    text: 'Foo'
+                },
+                {
+                    text: 'Bar'
                 }
             ]);
         });
 
-        test('context', () => {
-            standardPlural().parseString(`service.getPlural(1, 'Foo', 'Foos', 'Context');`);
+        test('ignoreMemberInstance: false', () => {
+            parser = createParser('service', 'getText', false);
+
+            parser.parseString(`service.getText('Foo');`);
+            parser.parseString(`this.service.getText('Bar');`);
 
             expect(messages).toEqual([
                 {
-                    text: 'Foo',
-                    textPlural: 'Foos',
-                    context: 'Context'
+                    text: 'Foo'
+                },
+                {
+                    text: 'Bar'
                 }
             ]);
         });
 
-        test('member method', () => {
-            standardPlural().parseString(`this.getPlural(1, 'Foo', 'Foos');`);
+        test('ignoreMemberInstance: true', () => {
+            parser = createParser('service', 'getText', true);
 
-            expect(messages).toEqual([]);
-        });
-
-        test('member instance method', () => {
-            standardPlural().parseString(`this.service.getPlural(1, 'Foo', 'Foos');`);
+            parser.parseString(`service.getText('Foo');`);
+            parser.parseString(`this.service.getText('Bar');`);
 
             expect(messages).toEqual([
                 {
-                    text: 'Foo',
-                    textPlural: 'Foos'
+                    text: 'Foo'
                 }
             ]);
         });
 
-        test('member instance method (ignoreMemberInstance)', () => {
-            ignoreMemberInstancePlural().parseString(`this.service.getPlural(1, 'Foo', 'Foos');`);
+        test('case sensitivity', () => {
+            parser = createParser('service', 'getText');
+
+            parser.parseString(`service.gettext('Foo');`);
+            parser.parseString(`Service.getText('Foo');`);
+            parser.parseString(`Service.gettext('Foo');`);
 
             expect(messages).toEqual([]);
         });
 
         test('function call', () => {
-            standardPlural().parseString(`getPlural(1, 'Foo', 'Foos');`);
+            parser = createParser('service', 'getText');
+
+            parser.parseString(`getText('Foo')`);
 
             expect(messages).toEqual([]);
-        });
-
-        test('non-literal parameter (text)', () => {
-            standardPlural().parseString(`service.getPlural(1, foo, 'Foos');`);
-
-            expect(messages).toEqual([]);
-        });
-
-        test('non-literal parameter (textPlural)', () => {
-            standardPlural().parseString(`service.getPlural(1, 'Foo', fooPlural);`);
-
-            expect(messages).toEqual([]);
-        });
-
-        test('case sensitivity', () => {
-            standardPlural().parseString(`service.getplural(1, 'Foo', 'Foos);`);
-
-            expect(messages).toEqual([]);
-        });
-
-        test('no context argument mapping', () => {
-            noContextPlural().parseString(`service.getPlural(1, 'Foo', 'Foos', 'Context?');`);
-
-            expect(messages).toEqual([
-                {
-                    text: 'Foo',
-                    textPlural: 'Foos'
-                }
-            ]);
-        });
-
-        test('weird argument mapping', () => {
-            weirdPlural().parseString(`service.getPlural('Context', something, 'Foo', something, 'Foos');`);
-
-            expect(messages).toEqual([
-                {
-                    text: 'Foo',
-                    textPlural: 'Foos',
-                    context: 'Context'
-                }
-            ]);
         });
     });
 
