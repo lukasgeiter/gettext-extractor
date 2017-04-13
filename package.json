@@ -1,42 +1,42 @@
 {
-  "name": "gettext-extractor",
-  "version": "1.0.2",
-  "description": "Gettext extractor for JavaScript, TypeScript and JSX",
-  "author": "Lukas Geiter <info@lukasgeiter.com>",
-  "repository": "lukasgeiter/gettext-extractor",
-  "bugs": "https://github.com/lukasgeiter/gettext-extractor/issues",
-  "license": "MIT",
-  "keywords": [
-    "gettext",
-    "extractor",
-    "typescript",
-    "po-files",
-    "i18n",
-    "l10n",
-    "translation"
-  ],
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist/",
-    "LICENSE.md",
-    "README.md"
-  ],
-  "scripts": {
-    "test": "jest --config jest.json",
-    "lint": "tslint src/**/*.ts{,x}",
-    "build": "tsc"
-  },
-  "dependencies": {
-    "gettext-parser": "^1.2",
-    "glob": "5 - 7",
-    "typescript": "^2"
-  },
-  "devDependencies": {
-    "@types/jest": "^19.2.2",
-    "@types/node": "^7.0.8",
-    "jest": "^19.0.2",
-    "ts-jest": "^19.0.1",
-    "tslint": "^4.5.1"
-  }
+    "name": "gettext-extractor",
+    "version": "1.0.2",
+    "description": "Gettext extractor for JavaScript, TypeScript and JSX",
+    "author": "Lukas Geiter <info@lukasgeiter.com>",
+    "repository": "lukasgeiter/gettext-extractor",
+    "bugs": "https://github.com/lukasgeiter/gettext-extractor/issues",
+    "license": "MIT",
+    "keywords": [
+        "gettext",
+        "extractor",
+        "typescript",
+        "po-files",
+        "i18n",
+        "l10n",
+        "translation"
+    ],
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist/",
+        "LICENSE.md",
+        "README.md"
+    ],
+    "scripts": {
+        "test": "jest --config jest.json",
+        "lint": "tslint src/**/*.ts{,x}",
+        "build": "tsc"
+    },
+    "dependencies": {
+        "gettext-parser": "^1.2",
+        "glob": "5 - 7",
+        "typescript": "^2"
+    },
+    "devDependencies": {
+        "@types/jest": "^19.2.2",
+        "@types/node": "^7.0.8",
+        "jest": "^19.0.2",
+        "ts-jest": "^19.0.1",
+        "tslint": "^4.5.1"
+    }
 }

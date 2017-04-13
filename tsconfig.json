@@ -1,15 +1,15 @@
 {
-  "compilerOptions": {
-    "outDir": "dist/",
-    "target": "ES5",
-    "module": "commonjs",
-    "declaration": true,
-    "newLine": "LF"
-  },
-  "files": [
-    "src/index.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+    "compilerOptions": {
+        "outDir": "dist/",
+        "target": "ES5",
+        "module": "commonjs",
+        "declaration": true,
+        "newLine": "LF"
+    },
+    "files": [
+        "src/index.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
 }
