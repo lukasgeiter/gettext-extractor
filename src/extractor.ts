@@ -17,8 +17,6 @@ export interface IGettextExtractorStats {
 
 export class GettextExtractor {
 
-    public static STRING_LITERAL_FILENAME: string = 'gettext-extractor-string-literal';
-
     private stats: IGettextExtractorStats = {
         numberOfMessages: 0,
         numberOfPluralMessages: 0,

@@ -1,8 +1,9 @@
 import * as ts from 'typescript';
 
-import { IGettextExtractorStats, GettextExtractor } from '../../src/extractor';
-import { JsParser, IAddMessageCallback } from '../../src/js/parser';
+import { IGettextExtractorStats } from '../../src/extractor';
 import { IMessage, CatalogBuilder } from '../../src/builder';
+import { JsParser } from '../../src/js/parser';
+import { IAddMessageCallback, Parser } from '../../src/parser';
 
 describe('JsParser', () => {
 
@@ -314,7 +315,7 @@ describe('JsParser', () => {
 
         test('string literal file name', () => {
             sourceFileMock.getLineAndCharacterOfPosition.mockReturnValueOnce({line: 16});
-            sourceFileMock.fileName = GettextExtractor.STRING_LITERAL_FILENAME;
+            sourceFileMock.fileName = Parser.STRING_LITERAL_FILENAME;
 
             callback({
                 text: 'Foo'

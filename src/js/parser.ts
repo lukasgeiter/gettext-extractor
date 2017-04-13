@@ -19,7 +19,7 @@ export class JsParser extends Parser<IJsExtractorFunction> {
 
             data.fileName = data.fileName || sourceFile.fileName;
 
-            if (data.fileName && data.lineNumber && data.fileName !== GettextExtractor.STRING_LITERAL_FILENAME) {
+            if (data.fileName && data.lineNumber && data.fileName !== Parser.STRING_LITERAL_FILENAME) {
                 references = [`${data.fileName}:${data.lineNumber}`];
             }
 

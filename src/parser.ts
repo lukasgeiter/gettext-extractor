@@ -18,6 +18,8 @@ export type IAddMessageCallback = (data: IMessageData) => void;
 
 export abstract class Parser<TExtractorFunction extends Function> {
 
+    public static STRING_LITERAL_FILENAME: string = 'gettext-extractor-string-literal';
+
     constructor(
         protected builder: CatalogBuilder,
         protected extractors: TExtractorFunction[] = [],
@@ -34,7 +36,7 @@ export abstract class Parser<TExtractorFunction extends Function> {
             throw new Error(`Missing extractor functions. Provide them when creating the parser or dynamically add extractors using 'addExtractor()'`);
         }
 
-        this.parse(source, fileName || GettextExtractor.STRING_LITERAL_FILENAME);
+        this.parse(source, fileName || Parser.STRING_LITERAL_FILENAME);
 
         return this;
     }
