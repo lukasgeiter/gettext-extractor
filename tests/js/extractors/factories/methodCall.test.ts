@@ -1,6 +1,5 @@
 import { CatalogBuilder, IMessage } from '../../../../src/builder';
 import { JsParser } from '../../../../src/js/parser';
-import { JsExtractors } from '../../../../src/js/extractors/index';
 import { IMethodCallOptions, methodCallExtractor } from '../../../../src/js/extractors/factories/methodCall';
 
 describe('JS: Method Call Extractor', () => {

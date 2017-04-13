@@ -1,7 +1,6 @@
 // This unit test serves as test for the comments in both `functionCall` and `methodCall` since they use the same code for the comments
 import { CatalogBuilder, IMessage } from '../../../src/builder';
 import { JsParser } from '../../../src/js/parser';
-import { JsExtractors } from '../../../src/js/extractors/index';
 import { functionCallExtractor } from '../../../src/js/extractors/factories/functionCall';
 
 describe('JS: comments', () => {

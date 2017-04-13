@@ -1,7 +1,7 @@
 import { CatalogBuilder, IMessage } from '../../../../src/builder';
 import { JsParser } from '../../../../src/js/parser';
 import { functionCallExtractor } from '../../../../src/js/extractors/factories/functionCall';
-import { IOptions } from '../../../../src/js/extractors/common';
+import { IJsExtractorOptions } from '../../../../src/js/extractors/common';
 
 describe('JS: Function Call Extractor', () => {
 
@@ -20,7 +20,7 @@ describe('JS: Function Call Extractor', () => {
     });
 
     describe('extraction', () => {
-        function createParser(functionName: string, options: IOptions): JsParser {
+        function createParser(functionName: string, options: IJsExtractorOptions): JsParser {
             return new JsParser(builder, [
                 functionCallExtractor(functionName, options)
             ]);
