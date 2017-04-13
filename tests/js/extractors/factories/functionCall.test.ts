@@ -1,8 +1,9 @@
-import { CatalogBuilder, IMessage } from '../../src/builder';
-import { IMethodCallOptions, JsExtractors } from '../../src/js/extractors';
-import { JsParser } from '../../src/js/parser';
+import { CatalogBuilder, IMessage } from '../../../../src/builder';
+import { JsParser } from '../../../../src/js/parser';
+import { functionCallExtractor } from '../../../../src/js/extractors/factories/functionCall';
+import { IOptions } from '../../../../src/js/extractors/common';
 
-describe('JS: Method Call Extractor', () => {
+describe('JS: Function Call Extractor', () => {
 
     let builder: CatalogBuilder,
         parser: JsParser,
@@ -19,15 +20,15 @@ describe('JS: Method Call Extractor', () => {
     });
 
     describe('extraction', () => {
-        function createParser(instanceName: string, methodName: string, options: IMethodCallOptions): JsParser {
+        function createParser(functionName: string, options: IOptions): JsParser {
             return new JsParser(builder, [
-                JsExtractors.methodCall(instanceName, methodName, options)
+                functionCallExtractor(functionName, options)
             ]);
         }
 
         describe('singular', () => {
             beforeEach(() => {
-                parser = createParser('service', 'getText', {
+                parser = createParser('getText', {
                     arguments: {
                         text: 0,
                         context: 1
@@ -36,8 +37,8 @@ describe('JS: Method Call Extractor', () => {
             });
 
             test('text only', () => {
-                parser.parseString(`service.getText('Foo');`);
-                parser.parseString(`service.getText(Bar);`);
+                parser.parseString(`getText('Foo');`);
+                parser.parseString(`getText(Bar);`);
 
                 expect(messages).toEqual([
                     {
@@ -47,8 +48,8 @@ describe('JS: Method Call Extractor', () => {
             });
 
             test('with context', () => {
-                parser.parseString(`service.getText('Foo', 'Context');`);
-                parser.parseString(`service.getText('Bar', Context);`);
+                parser.parseString(`getText('Foo', 'Context');`);
+                parser.parseString(`getText('Bar', Context);`);
 
                 expect(messages).toEqual([
                     {
@@ -62,13 +63,13 @@ describe('JS: Method Call Extractor', () => {
             });
 
             test('no context argument mapping', () => {
-                parser = createParser('service', 'getText', {
+                parser = createParser('getText', {
                     arguments: {
                         text: 0
                     }
                 });
 
-                parser.parseString(`service.getText('Foo', 'Context');`);
+                parser.parseString(`getText('Foo', 'Context');`);
 
                 expect(messages).toEqual([
                     {
@@ -78,14 +79,14 @@ describe('JS: Method Call Extractor', () => {
             });
 
             test('weird argument mapping', () => {
-                parser = createParser('service', 'getText', {
+                parser = createParser('getText', {
                     arguments: {
                         text: 2,
                         context: 0
                     }
                 });
 
-                parser.parseString(`service.getText('Context', something, 'Foo');`);
+                parser.parseString(`getText('Context', something, 'Foo');`);
 
                 expect(messages).toEqual([
                     {
@@ -98,7 +99,7 @@ describe('JS: Method Call Extractor', () => {
 
         describe('plural', () => {
             beforeEach(() => {
-                parser = createParser('service', 'getPlural', {
+                parser = createParser('getPlural', {
                     arguments: {
                         text: 1,
                         textPlural: 2,
@@ -108,9 +109,9 @@ describe('JS: Method Call Extractor', () => {
             });
 
             test('text only', () => {
-                parser.parseString(`service.getPlural(1, 'Foo', 'Foos');`);
-                parser.parseString(`service.getPlural(1, Bar, 'Bars');`);
-                parser.parseString(`service.getPlural(1, 'Bar', Bars);`);
+                parser.parseString(`getPlural(1, 'Foo', 'Foos');`);
+                parser.parseString(`getPlural(1, Bar, 'Bars');`);
+                parser.parseString(`getPlural(1, 'Bar', Bars);`);
 
                 expect(messages).toEqual([
                     {
@@ -121,8 +122,8 @@ describe('JS: Method Call Extractor', () => {
             });
 
             test('with context', () => {
-                parser.parseString(`service.getPlural(1, 'Foo', 'Foos', 'Context');`);
-                parser.parseString(`service.getPlural(1, 'Bar', 'Bars', Context);`);
+                parser.parseString(`getPlural(1, 'Foo', 'Foos', 'Context');`);
+                parser.parseString(`getPlural(1, 'Bar', 'Bars', Context);`);
 
                 expect(messages).toEqual([
                     {
@@ -138,14 +139,14 @@ describe('JS: Method Call Extractor', () => {
             });
 
             test('no context argument mapping', () => {
-                parser = createParser('service', 'getPlural', {
+                parser = createParser('getPlural', {
                     arguments: {
                         text: 1,
                         textPlural: 2
                     }
                 });
 
-                parser.parseString(`service.getPlural(1, 'Foo', 'Foos', 'Context');`);
+                parser.parseString(`getPlural(1, 'Foo', 'Foos', 'Context');`);
 
                 expect(messages).toEqual([
                     {
@@ -156,7 +157,7 @@ describe('JS: Method Call Extractor', () => {
             });
 
             test('weird argument mapping', () => {
-                parser = createParser('service', 'getPlural', {
+                parser = createParser('getPlural', {
                     arguments: {
                         text: 2,
                         textPlural: 4,
@@ -164,7 +165,7 @@ describe('JS: Method Call Extractor', () => {
                     }
                 });
 
-                parser.parseString(`service.getPlural('Context', something, 'Foo', something, 'Foos');`);
+                parser.parseString(`getPlural('Context', something, 'Foo', something, 'Foos');`);
 
                 expect(messages).toEqual([
                     {
@@ -178,54 +179,21 @@ describe('JS: Method Call Extractor', () => {
     });
 
     describe('matching', () => {
-        function createParser(instanceName: string, methodName: string, ignoreMemberInstance: boolean = undefined): JsParser {
+        function createParser(functionName: string): JsParser {
             return new JsParser(builder, [
-                JsExtractors.methodCall(instanceName, methodName, {
+                functionCallExtractor(functionName, {
                     arguments: {
                         text: 0
-                    },
-                    ignoreMemberInstance: ignoreMemberInstance
+                    }
                 })
             ]);
         }
 
         test('standard use', () => {
-            parser = createParser('service', 'getText');
+            parser = createParser('getText');
 
-            parser.parseString(`service.getText('Foo');`);
-            parser.parseString(`this.service.getText('Bar');`);
-
-            expect(messages).toEqual([
-                {
-                    text: 'Foo'
-                },
-                {
-                    text: 'Bar'
-                }
-            ]);
-        });
-
-        test('ignoreMemberInstance: false', () => {
-            parser = createParser('service', 'getText', false);
-
-            parser.parseString(`service.getText('Foo');`);
-            parser.parseString(`this.service.getText('Bar');`);
-
-            expect(messages).toEqual([
-                {
-                    text: 'Foo'
-                },
-                {
-                    text: 'Bar'
-                }
-            ]);
-        });
-
-        test('ignoreMemberInstance: true', () => {
-            parser = createParser('service', 'getText', true);
-
-            parser.parseString(`service.getText('Foo');`);
-            parser.parseString(`this.service.getText('Bar');`);
+            parser.parseString(`getText('Foo');`);
+            parser.parseString(`this.getText('Bar');`);
 
             expect(messages).toEqual([
                 {
@@ -235,88 +203,68 @@ describe('JS: Method Call Extractor', () => {
         });
 
         test('case sensitivity', () => {
-            parser = createParser('service', 'getText');
+            parser = createParser('getText');
 
-            parser.parseString(`service.gettext('Foo');`);
-            parser.parseString(`Service.getText('Foo');`);
-            parser.parseString(`Service.gettext('Foo');`);
+            parser.parseString(`gettext('Foo');`);
 
             expect(messages).toEqual([]);
         });
 
-        test('function call', () => {
-            parser = createParser('service', 'getText');
+        test('method call', () => {
+            parser = createParser('getText');
 
-            parser.parseString(`getText('Foo')`);
+            parser.parseString(`service.getText('Foo')`);
 
             expect(messages).toEqual([]);
         });
     });
 
     describe('argument validation', () => {
-        test('instanceName: (none)', () => {
+        test('functionName: (none)', () => {
             expect(() => {
-                (<any>JsExtractors.methodCall)();
-            }).toThrowError(`Missing argument 'instanceName'`);
+                (<any>functionCallExtractor)();
+            }).toThrowError(`Missing argument 'functionName'`);
         });
 
-        test('instanceName: null', () => {
+        test('functionName: null', () => {
             expect(() => {
-                (<any>JsExtractors.methodCall)(null);
-            }).toThrowError(`Argument 'instanceName' must be a non-empty string`);
+                (<any>functionCallExtractor)(null);
+            }).toThrowError(`Argument 'functionName' must be a non-empty string`);
         });
 
-        test('instanceName: wrong type', () => {
+        test('functionName: wrong type', () => {
             expect(() => {
-                (<any>JsExtractors.methodCall)(42);
-            }).toThrowError(`Argument 'instanceName' must be a non-empty string`);
-        });
-
-        test('methodName: (none)', () => {
-            expect(() => {
-                (<any>JsExtractors.methodCall)('service');
-            }).toThrowError(`Missing argument 'methodName'`);
-        });
-
-        test('methodName: null', () => {
-            expect(() => {
-                (<any>JsExtractors.methodCall)('service', null);
-            }).toThrowError(`Argument 'methodName' must be a non-empty string`);
-        });
-
-        test('methodName: wrong type', () => {
-            expect(() => {
-                (<any>JsExtractors.methodCall)('service', 42);
-            }).toThrowError(`Argument 'methodName' must be a non-empty string`);
+                (<any>functionCallExtractor)(42);
+            }).toThrowError(`Argument 'functionName' must be a non-empty string`);
         });
 
         test('options: (none)', () => {
             expect(() => {
-                (<any>JsExtractors.methodCall)('service', 'getText');
+                (<any>functionCallExtractor)('getText');
             }).toThrowError(`Missing argument 'options'`);
         });
 
         test('options: null', () => {
             expect(() => {
-                (<any>JsExtractors.methodCall)('service', 'getText', null);
+                (<any>functionCallExtractor)('getText', null);
             }).toThrowError(`Argument 'options' must be an object`);
         });
 
         test('options: wrong type', () => {
             expect(() => {
-                (<any>JsExtractors.methodCall)('service', 'getText', 42);
+                (<any>functionCallExtractor)('getText', 42);
             }).toThrowError(`Argument 'options' must be an object`);
         });
 
         test('options.arguments: (none)', () => {
             expect(() => {
-                (<any>JsExtractors.methodCall)('service', 'getText', {});
+                (<any>functionCallExtractor)('getText', {});
             }).toThrowError(`Property 'options.arguments' must be an object`);
         });
 
         test('options.arguments: null', () => {
             expect(() => {
-                (<any>JsExtractors.methodCall)('service', 'getText', {
+                (<any>functionCallExtractor)('getText', {
                     arguments: null
                 });
             }).toThrowError(`Property 'options.arguments' must be an object`);
@@ -324,7 +272,7 @@ describe('JS: Method Call Extractor', () => {
 
         test('options.arguments: wrong type', () => {
             expect(() => {
-                (<any>JsExtractors.methodCall)('service', 'getText', {
+                (<any>functionCallExtractor)('getText', {
                     arguments: 42
                 });
             }).toThrowError(`Property 'options.arguments' must be an object`);
@@ -332,7 +280,7 @@ describe('JS: Method Call Extractor', () => {
 
         test('options.arguments.text: (none)', () => {
             expect(() => {
-                (<any>JsExtractors.methodCall)('service', 'getText', {
+                (<any>functionCallExtractor)('getText', {
                     arguments: {}
                 });
             }).toThrowError(`Property 'options.arguments.text' is missing`);
@@ -340,7 +288,7 @@ describe('JS: Method Call Extractor', () => {
 
         test('options.arguments.text: null', () => {
             expect(() => {
-                (<any>JsExtractors.methodCall)('service', 'getText', {
+                (<any>functionCallExtractor)('getText', {
                     arguments: {
                         text: null
                     }
@@ -350,7 +298,7 @@ describe('JS: Method Call Extractor', () => {
 
         test('options.arguments.text: wrong type', () => {
             expect(() => {
-                (<any>JsExtractors.methodCall)('service', 'getText', {
+                (<any>functionCallExtractor)('getText', {
                     arguments: {
                         text: 'Foo'
                     }
@@ -360,7 +308,7 @@ describe('JS: Method Call Extractor', () => {
 
         test('options.arguments.textPlural: null', () => {
             expect(() => {
-                (<any>JsExtractors.functionCall)('getText', {
+                (<any>functionCallExtractor)('getText', {
                     arguments: {
                         text: 1,
                         textPlural: null
@@ -371,7 +319,7 @@ describe('JS: Method Call Extractor', () => {
 
         test('options.arguments.textPlural: wrong type', () => {
             expect(() => {
-                (<any>JsExtractors.functionCall)('getText', {
+                (<any>functionCallExtractor)('getText', {
                     arguments: {
                         text: 1,
                         textPlural: 'Foo'
@@ -382,7 +330,7 @@ describe('JS: Method Call Extractor', () => {
 
         test('options.arguments.context: null', () => {
             expect(() => {
-                (<any>JsExtractors.functionCall)('getText', {
+                (<any>functionCallExtractor)('getText', {
                     arguments: {
                         text: 1,
                         context: null
@@ -393,7 +341,7 @@ describe('JS: Method Call Extractor', () => {
 
         test('options.arguments.context: wrong type', () => {
             expect(() => {
-                (<any>JsExtractors.functionCall)('getText', {
+                (<any>functionCallExtractor)('getText', {
                     arguments: {
                         text: 1,
                         context: 'Foo'
@@ -404,7 +352,7 @@ describe('JS: Method Call Extractor', () => {
 
         test('options.comments.regex: null', () => {
             expect(() => {
-                (<any>JsExtractors.functionCall)('getText', {
+                (<any>functionCallExtractor)('getText', {
                     arguments: {
                         text: 1
                     },
@@ -417,7 +365,7 @@ describe('JS: Method Call Extractor', () => {
 
         test('options.comments.regex: wrong type', () => {
             expect(() => {
-                (<any>JsExtractors.functionCall)('getText', {
+                (<any>functionCallExtractor)('getText', {
                     arguments: {
                         text: 1
                     },
@@ -430,7 +378,7 @@ describe('JS: Method Call Extractor', () => {
 
         test('options.comments.otherLineLeading: null', () => {
             expect(() => {
-                (<any>JsExtractors.functionCall)('getText', {
+                (<any>functionCallExtractor)('getText', {
                     arguments: {
                         text: 1
                     },
@@ -443,7 +391,7 @@ describe('JS: Method Call Extractor', () => {
 
         test('options.comments.otherLineLeading: wrong type', () => {
             expect(() => {
-                (<any>JsExtractors.functionCall)('getText', {
+                (<any>functionCallExtractor)('getText', {
                     arguments: {
                         text: 1
                     },
@@ -456,7 +404,7 @@ describe('JS: Method Call Extractor', () => {
 
         test('options.comments.sameLineLeading: null', () => {
             expect(() => {
-                (<any>JsExtractors.functionCall)('getText', {
+                (<any>functionCallExtractor)('getText', {
                     arguments: {
                         text: 1
                     },
@@ -469,7 +417,7 @@ describe('JS: Method Call Extractor', () => {
 
         test('options.comments.sameLineLeading: wrong type', () => {
             expect(() => {
-                (<any>JsExtractors.functionCall)('getText', {
+                (<any>functionCallExtractor)('getText', {
                     arguments: {
                         text: 1
                     },
@@ -482,7 +430,7 @@ describe('JS: Method Call Extractor', () => {
 
         test('options.comments.sameLineTrailing: null', () => {
             expect(() => {
-                (<any>JsExtractors.functionCall)('getText', {
+                (<any>functionCallExtractor)('getText', {
                     arguments: {
                         text: 1
                     },
@@ -495,7 +443,7 @@ describe('JS: Method Call Extractor', () => {
 
         test('options.comments.sameLineTrailing: wrong type', () => {
             expect(() => {
-                (<any>JsExtractors.functionCall)('getText', {
+                (<any>functionCallExtractor)('getText', {
                     arguments: {
                         text: 1
                     },

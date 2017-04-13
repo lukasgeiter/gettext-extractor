@@ -1,7 +1,8 @@
 // This unit test serves as test for the comments in both `functionCall` and `methodCall` since they use the same code for the comments
-import { CatalogBuilder, IMessage } from '../../src/builder';
-import { JsExtractors } from '../../src/js/extractors';
-import { JsParser } from '../../src/js/parser';
+import { CatalogBuilder, IMessage } from '../../../src/builder';
+import { JsParser } from '../../../src/js/parser';
+import { JsExtractors } from '../../../src/js/extractors/index';
+import { functionCallExtractor } from '../../../src/js/extractors/factories/functionCall';
 
 describe('JS: comments', () => {
 
@@ -99,7 +100,7 @@ describe('JS: comments', () => {
 
         beforeEach(() => {
             parser = new JsParser(builder, [
-                JsExtractors.functionCall('getText', {
+                functionCallExtractor('getText', {
                     arguments: {
                         text: 0,
                         context: 1
@@ -202,7 +203,7 @@ describe('JS: comments', () => {
     describe('same line', () => {
         beforeEach(() => {
             parser = new JsParser(builder, [
-                JsExtractors.functionCall('getText', {
+                functionCallExtractor('getText', {
                     arguments: {
                         text: 0,
                         context: 1
@@ -289,7 +290,7 @@ describe('JS: comments', () => {
     describe('only trailing', () => {
         beforeEach(() => {
             parser = new JsParser(builder, [
-                JsExtractors.functionCall('getText', {
+                functionCallExtractor('getText', {
                     arguments: {
                         text: 0,
                         context: 1
@@ -368,7 +369,7 @@ describe('JS: comments', () => {
     describe('all leading', () => {
         beforeEach(() => {
             parser = new JsParser(builder, [
-                JsExtractors.functionCall('getText', {
+                functionCallExtractor('getText', {
                     arguments: {
                         text: 0,
                         context: 1
@@ -462,7 +463,7 @@ describe('JS: comments', () => {
 
         beforeEach(() => {
             parser = new JsParser(builder, [
-                JsExtractors.functionCall('getText', {
+                functionCallExtractor('getText', {
                     arguments: {
                         text: 0,
                         context: 1
@@ -537,7 +538,7 @@ describe('JS: comments', () => {
 
         beforeEach(() => {
             parser = new JsParser(builder, [
-                JsExtractors.functionCall('getText', {
+                functionCallExtractor('getText', {
                     arguments: {
                         text: 0,
                         context: 1
@@ -622,7 +623,7 @@ describe('JS: comments', () => {
 
         beforeEach(() => {
             parser = new JsParser(builder, [
-                JsExtractors.functionCall('getText', {
+                functionCallExtractor('getText', {
                     arguments: {
                         text: 0,
                         context: 1
@@ -648,7 +649,7 @@ describe('JS: comments', () => {
 
         beforeEach(() => {
             parser = new JsParser(builder, [
-                JsExtractors.functionCall('getText', {
+                functionCallExtractor('getText', {
                     arguments: {
                         text: 0,
                         context: 1
