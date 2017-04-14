@@ -30,6 +30,7 @@
     "dependencies": {
         "gettext-parser": "^1.2",
         "glob": "5 - 7",
+        "parse5": "^3",
         "typescript": "^2"
     },
     "devDependencies": {

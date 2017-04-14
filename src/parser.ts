@@ -1,8 +1,8 @@
 import * as fs from 'fs';
 import * as glob from 'glob';
 
-import { GettextExtractor, IGettextExtractorStats } from './extractor';
-import { CatalogBuilder } from './builder';
+import { IGettextExtractorStats } from './extractor';
+import { CatalogBuilder, IMessage } from './builder';
 import { Validate } from './utils/validate';
 
 export interface IMessageData {
@@ -20,6 +20,32 @@ export abstract class Parser<TExtractorFunction extends Function> {
 
     public static STRING_LITERAL_FILENAME: string = 'gettext-extractor-string-literal';
 
+    public static createAddMessageCallback(messages: IMessage[], fileName: string, getLineNumber: () => number): IAddMessageCallback {
+        return (data: IMessageData) => {
+            let references: string[];
+
+            if (typeof data.lineNumber !== 'number') {
+                data.lineNumber = getLineNumber();
+            }
+
+            data.fileName = data.fileName || fileName;
+
+            if (data.fileName && data.lineNumber && data.fileName !== Parser.STRING_LITERAL_FILENAME) {
+                references = [`${data.fileName}:${data.lineNumber}`];
+            }
+
+            let message: IMessage = {
+                text: data.text,
+                textPlural: data.textPlural || undefined,
+                context: data.context || undefined,
+                references: references,
+                comments: data.comments && data.comments.length ? data.comments : undefined
+            };
+
+            messages.push(message);
+        };
+    }
+
     constructor(
         protected builder: CatalogBuilder,
         protected extractors: TExtractorFunction[] = [],
@@ -36,7 +62,16 @@ export abstract class Parser<TExtractorFunction extends Function> {
             throw new Error(`Missing extractor functions. Provide them when creating the parser or dynamically add extractors using 'addExtractor()'`);
         }
 
-        this.parse(source, fileName || Parser.STRING_LITERAL_FILENAME);
+        let messages = this.parse(source, fileName || Parser.STRING_LITERAL_FILENAME);
+
+        for (let message of messages) {
+            this.builder.addMessage(message);
+        }
+
+        this.stats && this.stats.numberOfParsedFiles++;
+        if (messages.length) {
+            this.stats && this.stats.numberOfParsedFilesWithMessages++;
+        }
 
         return this;
     }
@@ -76,5 +111,5 @@ export abstract class Parser<TExtractorFunction extends Function> {
         }
     }
 
-    protected abstract parse(source: string, fileName: string): void;
+    protected abstract parse(source: string, fileName: string): IMessage[];
 }

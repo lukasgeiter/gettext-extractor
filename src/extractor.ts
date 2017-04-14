@@ -3,6 +3,7 @@ import * as gettextParser from 'gettext-parser';
 
 import { CatalogBuilder, IGettextContextMap, IMessage } from './builder';
 import { JsParser, IJsExtractorFunction } from './js/parser';
+import { HtmlParser, IHtmlExtractorFunction } from './html/parser';
 import { StatsOutput } from './utils/output';
 import { Validate } from './utils/validate';
 
@@ -36,6 +37,12 @@ export class GettextExtractor {
         Validate.optional.nonEmptyArray({extractors});
 
         return new JsParser(this.builder, extractors, this.stats);
+    }
+
+    public createHtmlParser(extractors?: IHtmlExtractorFunction[]): HtmlParser {
+        Validate.optional.nonEmptyArray({extractors});
+
+        return new HtmlParser(this.builder, extractors, this.stats);
     }
 
     public addMessage(message: IMessage): void {
