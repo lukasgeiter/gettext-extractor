@@ -215,6 +215,12 @@ export function registerCommonParserTests(parserClass: any): void {
                     (<any>parser.parseFilesGlob)(42);
                 }).toThrowError(`Argument 'pattern' must be a non-empty string`);
             });
+
+            test('globOptions: wrong type', () => {
+                expect(() => {
+                    (<any>parser.parseFilesGlob)('*.ts;', 'foo');
+                }).toThrowError(`Argument 'globOptions' must be an object`);
+            });
         });
 
         describe('parseString', () => {
