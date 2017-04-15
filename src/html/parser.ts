@@ -5,6 +5,7 @@ import { IMessage } from '../builder';
 
 export type Node = parse5.AST.Default.Node;
 export type TextNode = parse5.AST.Default.TextNode;
+export type Element = parse5.AST.Default.Element;
 
 export type IHtmlExtractorFunction = (node: Node, fileName: string, addMessage: IAddMessageCallback) => void;
 
