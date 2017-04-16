@@ -128,7 +128,7 @@ export class Validate {
 
             if (properties.length) {
                 if (typeof value !== 'object' || value === null) {
-                    if (this.required) {
+                    if (value !== undefined || this.required) {
                         throw this.typeError(`Property '${name}' must be an object`);
                     } else {
                         break;
