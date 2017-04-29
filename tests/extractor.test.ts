@@ -9,7 +9,9 @@ describe('GettextExtractor', () => {
     });
 
     describe('argument validation', () => {
+
         describe('addMessage', () => {
+
             test('message: (none)', () => {
                 expect(() => {
                     (<any>extractor.addMessage)();
@@ -132,6 +134,7 @@ describe('GettextExtractor', () => {
         });
 
         describe('savePotFile', () => {
+
             test('fileName: (none)', () => {
                 expect(() => {
                     (<any>extractor.savePotFile)();
@@ -152,6 +155,7 @@ describe('GettextExtractor', () => {
         });
 
         describe('createJsParser', () => {
+
             test('extractors: (none)', () => {
                 expect(() => {
                     (<any>extractor.createJsParser)();

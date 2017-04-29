@@ -19,6 +19,7 @@ describe('JS: Method Call Extractor', () => {
     });
 
     describe('extraction', () => {
+
         function createParser(instanceName: string, methodName: string, options: IMethodCallOptions): JsParser {
             return new JsParser(builder, [
                 methodCallExtractor(instanceName, methodName, options)
@@ -26,6 +27,7 @@ describe('JS: Method Call Extractor', () => {
         }
 
         describe('singular', () => {
+
             beforeEach(() => {
                 parser = createParser('service', 'getText', {
                     arguments: {
@@ -97,6 +99,7 @@ describe('JS: Method Call Extractor', () => {
         });
 
         describe('plural', () => {
+
             beforeEach(() => {
                 parser = createParser('service', 'getPlural', {
                     arguments: {
@@ -178,6 +181,7 @@ describe('JS: Method Call Extractor', () => {
     });
 
     describe('matching', () => {
+
         function createParser(instanceName: string, methodName: string, ignoreMemberInstance: boolean = undefined): JsParser {
             return new JsParser(builder, [
                 methodCallExtractor(instanceName, methodName, {
@@ -254,6 +258,7 @@ describe('JS: Method Call Extractor', () => {
     });
 
     describe('argument validation', () => {
+
         test('instanceName: (none)', () => {
             expect(() => {
                 (<any>methodCallExtractor)();

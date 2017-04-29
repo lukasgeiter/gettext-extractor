@@ -4,6 +4,7 @@ import { GettextExtractor } from '../../src/extractor';
 import { JsExtractors } from '../../src/js/extractors';
 
 describe('Realistic Scenarios', () => {
+
     test('Scenario 1', () => {
         let expectedPotString = fs.readFileSync('tests/fixtures/realistic/expected.pot').toString().trim();
 

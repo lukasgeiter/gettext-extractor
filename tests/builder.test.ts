@@ -439,6 +439,7 @@ describe('CatalogBuilder', () => {
     });
 
     describe('stats', () => {
+
         test('basic scenario', () => {
             builder.addMessage({
                 text: 'Foo'

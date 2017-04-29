@@ -200,6 +200,7 @@ describe('JS: comments', () => {
     });
 
     describe('same line', () => {
+
         beforeEach(() => {
             parser = new JsParser(builder, [
                 functionCallExtractor('getText', {
@@ -287,6 +288,7 @@ describe('JS: comments', () => {
     });
 
     describe('only trailing', () => {
+
         beforeEach(() => {
             parser = new JsParser(builder, [
                 functionCallExtractor('getText', {
@@ -366,6 +368,7 @@ describe('JS: comments', () => {
     });
 
     describe('all leading', () => {
+
         beforeEach(() => {
             parser = new JsParser(builder, [
                 functionCallExtractor('getText', {

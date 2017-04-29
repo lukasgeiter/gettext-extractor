@@ -20,6 +20,7 @@ describe('JS: Function Call Extractor', () => {
     });
 
     describe('extraction', () => {
+
         function createParser(functionName: string, options: IJsExtractorOptions): JsParser {
             return new JsParser(builder, [
                 functionCallExtractor(functionName, options)
@@ -27,6 +28,7 @@ describe('JS: Function Call Extractor', () => {
         }
 
         describe('singular', () => {
+
             beforeEach(() => {
                 parser = createParser('getText', {
                     arguments: {
@@ -98,6 +100,7 @@ describe('JS: Function Call Extractor', () => {
         });
 
         describe('plural', () => {
+
             beforeEach(() => {
                 parser = createParser('getPlural', {
                     arguments: {
@@ -179,6 +182,7 @@ describe('JS: Function Call Extractor', () => {
     });
 
     describe('matching', () => {
+
         function createParser(functionName: string): JsParser {
             return new JsParser(builder, [
                 functionCallExtractor(functionName, {
@@ -220,6 +224,7 @@ describe('JS: Function Call Extractor', () => {
     });
 
     describe('argument validation', () => {
+
         test('functionName: (none)', () => {
             expect(() => {
                 (<any>functionCallExtractor)();

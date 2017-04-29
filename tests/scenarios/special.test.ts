@@ -2,6 +2,7 @@ import { GettextExtractor } from '../../src/extractor';
 import { JsExtractors } from '../../src/js/extractors';
 
 describe('Special Scenarios', () => {
+
     test('Scenario 1', () => {
         let extractor = new GettextExtractor();
 
