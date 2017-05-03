@@ -56,6 +56,19 @@ export class GettextExtractor {
         return gettextParser.po.compile({translations: this.toGettextMessages(), charset: 'UTF-8'}).toString();
     }
 
+    public savePotFileAsync(fileName: string): Promise<any> {
+        Validate.required.nonEmptyString({ fileName });
+
+        return new Promise((resolve, reject) => {
+            fs.writeFile(fileName, this.toPotString(), (err) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve();
+            });
+        });
+    }
+
     public savePotFile(fileName: string): void {
         Validate.required.nonEmptyString({fileName});
 
