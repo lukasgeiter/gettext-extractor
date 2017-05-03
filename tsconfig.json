@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "outDir": "dist/",
-        "target": "ES5",
+        "target": "ES6",
         "module": "commonjs",
         "declaration": true,
         "newLine": "LF"
