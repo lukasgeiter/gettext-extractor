@@ -69,6 +69,19 @@ export class GettextExtractor {
         fs.writeFileSync(fileName, this.toPotString());
     }
 
+    public savePotFileAsync(fileName: string): Promise<any> {
+        Validate.required.nonEmptyString({fileName});
+
+        return new Promise((resolve, reject) => {
+            fs.writeFile(fileName, this.toPotString(), (error) => {
+                if (error) {
+                    return reject(error);
+                }
+                resolve();
+            });
+        });
+    }
+
     public getStats(): IGettextExtractorStats {
         return this.stats;
     }

@@ -154,6 +154,27 @@ describe('GettextExtractor', () => {
             });
         });
 
+        describe('savePotFileAsync', () => {
+
+            test('fileName: (none)', () => {
+                expect(() => {
+                  (<any>extractor.savePotFileAsync)();
+                }).toThrowError(`Missing argument 'fileName'`);
+            });
+
+            test('message: null', () => {
+                expect(() => {
+                  (<any>extractor.savePotFileAsync)(null);
+                }).toThrowError(`Argument 'fileName' must be a non-empty string`);
+            });
+
+            test('message: wrong type', () => {
+                expect(() => {
+                  (<any>extractor.savePotFileAsync)(42);
+                }).toThrowError(`Argument 'fileName' must be a non-empty string`);
+            });
+        });
+
         describe('createJsParser', () => {
 
             test('extractors: (none)', () => {
