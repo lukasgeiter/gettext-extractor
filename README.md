@@ -63,6 +63,11 @@ extractor
 // save the extracted messages as Gettext template file
 extractor.savePotFile('./messages.pot');
 
+// or save the extracted messages asynchronously
+extractor.savePotFileAsync('./messages.pot')
+    .then(() => console.log('Done'))
+    .catch((err) => console.error(err.message));
+
 // print nice statistics about the extracted messages
 extractor.printStats();
 ```
@@ -96,7 +101,7 @@ All the configuration is done and we can get started with parsing. The method `p
 
 #### Saving as Template File
 
-With `savePotFile()` all extracted messages are written to the specified `.pot` file in Gettext format.
+With `savePotFile()` or `savePotFileAsync()` all extracted messages are written to the specified `.pot` file in Gettext format.
 
 #### Printing Statistics
 
@@ -359,6 +364,21 @@ msgstr[0] ""
 
 ---
 
+#### `savePotFileAsync(fileName)`
+
+*Saves the extracted messages as Gettext template into a file asynchronously.*
+
+##### Parameters
+
+| Name | Type | Details |
+| --- | --- | --- |
+| `fileName` | *string* | **Required** · Path to `.pot` file |
+
+##### Return Value
+
+*Promise*
+
+---
 
 #### `getStats()`
 
