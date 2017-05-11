@@ -119,6 +119,10 @@ export class Validate {
         let value = object;
         let name = properties.shift();
 
+        if (!value && !this.required) {
+            return;
+        }
+
         this.object({[name]: value});
 
         let property: string;

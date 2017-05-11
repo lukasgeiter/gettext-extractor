@@ -1,5 +1,7 @@
+import * as ts from 'typescript';
+
 import { CatalogBuilder, IMessage } from '../../../src/builder';
-import { JsParser } from '../../../src/js/parser';
+import { JsParser, IJsParseOptions } from '../../../src/js/parser';
 import { callExpressionExtractor } from '../../../src/js/extractors/factories/callExpression';
 
 describe('JS: comments', () => {
@@ -74,8 +76,8 @@ describe('JS: comments', () => {
             }</h1>;
         `;
 
-    function getComments(source: string, fileName?: string): string[] {
-        parser.parseString(source, fileName);
+    function getComments(source: string, options?: IJsParseOptions): string[] {
+        parser.parseString(source, undefined, options);
         return messages.pop().comments;
     }
 
@@ -184,14 +186,14 @@ describe('JS: comments', () => {
         });
 
         test('jsx block', () => {
-            expect(getComments(JSX_BLOCK, 'foo.jsx')).toEqual([
+            expect(getComments(JSX_BLOCK, { scriptKind: ts.ScriptKind.JSX })).toEqual([
                 'Leading block comment on same line',
                 'Trailing block comment'
             ]);
         });
 
         test('jsx line', () => {
-            expect(getComments(JSX_LINE, 'foo.jsx')).toEqual([
+            expect(getComments(JSX_LINE, { scriptKind: ts.ScriptKind.JSX })).toEqual([
                 'Leading line comment',
                 'Trailing line comment'
             ]);
@@ -273,14 +275,14 @@ describe('JS: comments', () => {
         });
 
         test('jsx block', () => {
-            expect(getComments(JSX_BLOCK, 'foo.jsx')).toEqual([
+            expect(getComments(JSX_BLOCK, { scriptKind: ts.ScriptKind.JSX })).toEqual([
                 'Leading block comment on same line',
                 'Trailing block comment'
             ]);
         });
 
         test('jsx line', () => {
-            expect(getComments(JSX_LINE, 'foo.jsx')).toEqual([
+            expect(getComments(JSX_LINE, { scriptKind: ts.ScriptKind.JSX })).toEqual([
                 'Trailing line comment'
             ]);
         });
@@ -354,13 +356,13 @@ describe('JS: comments', () => {
         });
 
         test('jsx block', () => {
-            expect(getComments(JSX_BLOCK, 'foo.jsx')).toEqual([
+            expect(getComments(JSX_BLOCK, { scriptKind: ts.ScriptKind.JSX })).toEqual([
                 'Trailing block comment'
             ]);
         });
 
         test('jsx line', () => {
-            expect(getComments(JSX_LINE, 'foo.jsx')).toEqual([
+            expect(getComments(JSX_LINE, { scriptKind: ts.ScriptKind.JSX })).toEqual([
                 'Trailing line comment'
             ]);
         });
@@ -448,13 +450,13 @@ describe('JS: comments', () => {
         });
 
         test('jsx block', () => {
-            expect(getComments(JSX_BLOCK, 'foo.jsx')).toEqual([
+            expect(getComments(JSX_BLOCK, { scriptKind: ts.ScriptKind.JSX })).toEqual([
                 'Leading block comment on same line'
             ]);
         });
 
         test('jsx line', () => {
-            expect(getComments(JSX_LINE, 'foo.jsx')).toEqual([
+            expect(getComments(JSX_LINE, { scriptKind: ts.ScriptKind.JSX })).toEqual([
                 'Leading line comment'
             ]);
         });
@@ -525,13 +527,13 @@ describe('JS: comments', () => {
         });
 
         test('jsx block', () => {
-            expect(getComments(JSX_BLOCK, 'foo.jsx')).toEqual([
+            expect(getComments(JSX_BLOCK, { scriptKind: ts.ScriptKind.JSX })).toEqual([
                 'Leading block comment on same line'
             ]);
         });
 
         test('jsx line', () => {
-            expect(getComments(JSX_LINE, 'foo.jsx')).toBeUndefined();
+            expect(getComments(JSX_LINE, { scriptKind: ts.ScriptKind.JSX })).toBeUndefined();
         });
     });
 
@@ -610,11 +612,11 @@ describe('JS: comments', () => {
         });
 
         test('jsx block', () => {
-            expect(getComments(JSX_BLOCK, 'foo.jsx')).toBeUndefined();
+            expect(getComments(JSX_BLOCK, { scriptKind: ts.ScriptKind.JSX })).toBeUndefined();
         });
 
         test('jsx line', () => {
-            expect(getComments(JSX_LINE, 'foo.jsx')).toEqual([
+            expect(getComments(JSX_LINE, { scriptKind: ts.ScriptKind.JSX })).toEqual([
                 'Leading line comment'
             ]);
         });

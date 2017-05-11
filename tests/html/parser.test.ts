@@ -7,6 +7,54 @@ describe('HtmlParser', () => {
 
     registerCommonParserTests(HtmlParser);
 
+    describe('line number', () => {
+
+        let parser: HtmlParser;
+        let builderMock: CatalogBuilder;
+
+        beforeEach(() => {
+            builderMock = <any>{
+                addMessage: jest.fn()
+            };
+            parser = new HtmlParser(builderMock, [(node: TextNode, fileName: string, addMessage) => {
+                if (node.nodeName === '#text') {
+                    addMessage({
+                        text: node.value
+                    });
+                }
+            }]);
+        });
+
+        test('first line', () => {
+            parser.parseString(`<span>Foo</span>`, 'foo.html');
+
+            expect(builderMock.addMessage).toHaveBeenCalledWith({
+                text: 'Foo',
+                references: ['foo.html:1']
+            });
+        });
+
+        test('third line', () => {
+            parser.parseString(`\n\n<span>Foo</span>`, 'foo.html');
+
+            expect(builderMock.addMessage).toHaveBeenCalledWith({
+                text: 'Foo',
+                references: ['foo.html:3']
+            });
+        });
+
+        test('with offset', () => {
+            parser.parseString(`<span>Foo</span>`, 'foo.html', {
+                lineNumberStart: 10
+            });
+
+            expect(builderMock.addMessage).toHaveBeenCalledWith({
+                text: 'Foo',
+                references: ['foo.html:10']
+            });
+        });
+    });
+
     describe('unicode', () => {
 
         function check(text: string): void {

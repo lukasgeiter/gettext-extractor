@@ -16,7 +16,11 @@ export interface IMessageData {
 
 export type IAddMessageCallback = (data: IMessageData) => void;
 
-export abstract class Parser<TExtractorFunction extends Function> {
+export interface IParseOptions {
+    lineNumberStart?: number;
+}
+
+export abstract class Parser<TExtractorFunction extends Function, TParseOptions extends IParseOptions> {
 
     public static STRING_LITERAL_FILENAME: string = 'gettext-extractor-string-literal';
 
@@ -54,15 +58,16 @@ export abstract class Parser<TExtractorFunction extends Function> {
         this.validateExtractors(...extractors);
     }
 
-    public parseString(source: string, fileName?: string): this {
+    public parseString(source: string, fileName?: string, options?: TParseOptions): this {
         Validate.required.string({source});
-        Validate.optional.string({fileName});
+        Validate.optional.nonEmptyString({fileName});
+        this.validateParseOptions(options);
 
         if (!this.extractors.length) {
             throw new Error(`Missing extractor functions. Provide them when creating the parser or dynamically add extractors using 'addExtractor()'`);
         }
 
-        let messages = this.parse(source, fileName || Parser.STRING_LITERAL_FILENAME);
+        let messages = this.parse(source, fileName || Parser.STRING_LITERAL_FILENAME, options);
 
         for (let message of messages) {
             this.builder.addMessage(message);
@@ -76,20 +81,22 @@ export abstract class Parser<TExtractorFunction extends Function> {
         return this;
     }
 
-    public parseFile(fileName: string): this {
+    public parseFile(fileName: string, options?: TParseOptions): this {
         Validate.required.nonEmptyString({fileName});
+        this.validateParseOptions(options);
 
-        this.parseString(fs.readFileSync(fileName).toString(), fileName);
+        this.parseString(fs.readFileSync(fileName).toString(), fileName, options);
 
         return this;
     }
 
-    public parseFilesGlob(pattern: string, globOptions?: glob.IOptions): this {
+    public parseFilesGlob(pattern: string, globOptions?: glob.IOptions, options?: TParseOptions): this {
         Validate.required.nonEmptyString({pattern});
         Validate.optional.object({globOptions});
+        this.validateParseOptions(options);
 
         for (let fileName of glob.sync(pattern, globOptions)) {
-            this.parseFile(fileName);
+            this.parseFile(fileName, options);
         }
 
         return this;
@@ -104,6 +111,10 @@ export abstract class Parser<TExtractorFunction extends Function> {
         return this;
     }
 
+    protected validateParseOptions(options: TParseOptions): void {
+        Validate.optional.numberProperty(options, 'options.lineNumberStart');
+    }
+
     protected validateExtractors(...extractors: TExtractorFunction[]): void {
         for (let extractor of extractors) {
             if (typeof extractor !== 'function') {
@@ -112,5 +123,5 @@ export abstract class Parser<TExtractorFunction extends Function> {
         }
     }
 
-    protected abstract parse(source: string, fileName: string): IMessage[];
+    protected abstract parse(source: string, fileName: string, options?: TParseOptions): IMessage[];
 }

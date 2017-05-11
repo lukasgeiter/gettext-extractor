@@ -3,7 +3,7 @@ import { CatalogBuilder, IMessage } from '../src/builder';
 import { IGettextExtractorStats } from '../src/extractor';
 
 export function registerCommonParserTests(parserClass: any): void {
-    let parser: Parser<any>,
+    let parser: Parser<any, any>,
         builder: CatalogBuilder,
         messages: IMessage[];
 
@@ -194,6 +194,20 @@ export function registerCommonParserTests(parserClass: any): void {
                     (<any>parser.parseFile)(42);
                 }).toThrowError(`Argument 'fileName' must be a non-empty string`);
             });
+
+            test('options: wrong type', () => {
+                expect(() => {
+                    (<any>parser.parseFile)('foo.ts', 'bar');
+                }).toThrowError(`Argument 'options' must be an object`);
+            });
+
+            test('options.lineNumberStart: wrong type', () => {
+                expect(() => {
+                    (<any>parser.parseFile)('foo.ts', {
+                        lineNumberStart: 'bar'
+                    });
+                }).toThrowError(`Property 'options.lineNumberStart' must be a number`);
+            });
         });
 
         describe('parseFilesGlob', () => {
@@ -220,6 +234,20 @@ export function registerCommonParserTests(parserClass: any): void {
                 expect(() => {
                     (<any>parser.parseFilesGlob)('*.ts;', 'foo');
                 }).toThrowError(`Argument 'globOptions' must be an object`);
+            });
+
+            test('options: wrong type', () => {
+                expect(() => {
+                    (<any>parser.parseFilesGlob)('*.ts;', {}, 'foo');
+                }).toThrowError(`Argument 'options' must be an object`);
+            });
+
+            test('options.lineNumberStart: wrong type', () => {
+                expect(() => {
+                    (<any>parser.parseFilesGlob)('*.ts;', {}, {
+                        lineNumberStart: 'foo'
+                    });
+                }).toThrowError(`Property 'options.lineNumberStart' must be a number`);
             });
         });
 
@@ -252,7 +280,21 @@ export function registerCommonParserTests(parserClass: any): void {
             test('fileName: wrong type', () => {
                 expect(() => {
                     (<any>parser.parseString)('let foo = 42;', 42);
-                }).toThrowError(`Argument 'fileName' must be a string`);
+                }).toThrowError(`Argument 'fileName' must be a non-empty string`);
+            });
+
+            test('options: wrong type', () => {
+                expect(() => {
+                    (<any>parser.parseString)('let foo = 42;', 'foo.ts', 'bar');
+                }).toThrowError(`Argument 'options' must be an object`);
+            });
+
+            test('options.lineNumberStart: wrong type', () => {
+                expect(() => {
+                    (<any>parser.parseString)('let foo = 42;', 'foo.ts', {
+                        lineNumberStart: 'bar'
+                    });
+                }).toThrowError(`Property 'options.lineNumberStart' must be a number`);
             });
         });
 

@@ -9,6 +9,54 @@ describe('JsParser', () => {
 
     registerCommonParserTests(JsParser);
 
+    describe('line number', () => {
+
+        let parser: JsParser;
+        let builderMock: CatalogBuilder;
+
+        beforeEach(() => {
+            builderMock = <any>{
+                addMessage: jest.fn()
+            };
+            parser = new JsParser(builderMock, [(node: ts.Node, sourceFile: ts.SourceFile, addMessage) => {
+                if (node.kind === ts.SyntaxKind.StringLiteral) {
+                    addMessage({
+                        text: (<ts.StringLiteral>node).text
+                    });
+                }
+            }]);
+        });
+
+        test('first line', () => {
+            parser.parseString(`'Foo'`, 'foo.html');
+
+            expect(builderMock.addMessage).toHaveBeenCalledWith({
+                text: 'Foo',
+                references: ['foo.html:1']
+            });
+        });
+
+        test('third line', () => {
+            parser.parseString(`\n\n'Foo'`, 'foo.html');
+
+            expect(builderMock.addMessage).toHaveBeenCalledWith({
+                text: 'Foo',
+                references: ['foo.html:3']
+            });
+        });
+
+        test('with offset', () => {
+            parser.parseString(`'Foo'`, 'foo.html', {
+                lineNumberStart: 10
+            });
+
+            expect(builderMock.addMessage).toHaveBeenCalledWith({
+                text: 'Foo',
+                references: ['foo.html:10']
+            });
+        });
+    });
+
     describe('unicode', () => {
 
         function check(text: string): void {
