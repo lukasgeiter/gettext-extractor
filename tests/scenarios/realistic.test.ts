@@ -12,26 +12,26 @@ describe('Realistic Scenarios', () => {
 
         extractor
             .createJsParser([
-                JsExtractors.functionCall('getText', {
+                JsExtractors.callExpression('getText', {
                     arguments: {
                         text: 0,
                         context: 1
                     }
                 }),
-                JsExtractors.functionCall('getPlural', {
+                JsExtractors.callExpression('getPlural', {
                     arguments: {
                         text: 1,
                         textPlural: 2,
                         context: 3
                     }
                 }),
-                JsExtractors.methodCall('translationService', 'getText', {
+                JsExtractors.callExpression('[this].translationService.getText', {
                     arguments: {
                         text: 0,
                         context: 1
                     }
                 }),
-                JsExtractors.methodCall('translationService', 'getPlural', {
+                JsExtractors.callExpression('[this].translationService.getPlural', {
                     arguments: {
                         text: 1,
                         textPlural: 2,

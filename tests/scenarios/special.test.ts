@@ -7,7 +7,7 @@ describe('Special Scenarios', () => {
         let extractor = new GettextExtractor();
 
         let jsParser = extractor.createJsParser([
-            JsExtractors.functionCall('getText', {
+            JsExtractors.callExpression('getText', {
                 arguments: {
                     text: 0,
                     context: 1
