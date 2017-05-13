@@ -4,9 +4,6 @@
     },
     "testRegex": ".*\\.test\\.ts$",
     "roots": [
-        "<rootDir>/tests"
-    ],
-    "testPathIgnorePatterns": [
         "<rootDir>/tests/e2e"
     ],
     "moduleFileExtensions": [

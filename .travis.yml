@@ -10,6 +10,7 @@ branches:
 script:
   - yarn run build
   - yarn run test
+  - yarn run test:e2e
   - yarn run lint
 
 deploy:

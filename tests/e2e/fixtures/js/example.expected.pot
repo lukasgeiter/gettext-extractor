@@ -1,0 +1,17 @@
+msgid ""
+msgstr "Content-Type: text/plain;\n"
+
+#: tests/e2e/fixtures/js/view.jsx:22
+msgid "One new message"
+msgid_plural "{{n}} new messages"
+msgstr[0] ""
+
+#: tests/e2e/fixtures/js/view.jsx:14
+#. Comment
+msgid "Refresh"
+msgstr ""
+
+#: tests/e2e/fixtures/js/hello.jsx:5
+msgctxt "title"
+msgid "Hello World!"
+msgstr ""

@@ -40,7 +40,9 @@ This will run [tslint] to check for code style errors.
 yarn test
 ```
 
-This will run all automated tests with [jest].
+This will run automated tests with [jest]. There are also some end-to-end tests which can be run with `yarn test:e2e`.
+
+> **Note:** The E2E tests expect a built version of the package to be present in `dist/` so it's best to run `yarn build` first.
 
 <br/>
 

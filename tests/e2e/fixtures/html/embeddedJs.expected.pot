@@ -1,0 +1,6 @@
+msgid ""
+msgstr "Content-Type: text/plain;\n"
+
+#: tests/e2e/fixtures/html/embeddedJs.html:10
+msgid "Hello World!"
+msgstr ""

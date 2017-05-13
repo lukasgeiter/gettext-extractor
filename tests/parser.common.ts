@@ -84,7 +84,7 @@ export function registerCommonParserTests(parserClass: any): void {
 
         expect(parser.parseString('')).toBe(parser);
         expect(parser.parseFilesGlob('tests/fixtures/*.ts')).toBe(parser);
-        expect(parser.parseFile('tests/fixtures/foo.ts')).toBe(parser);
+        expect(parser.parseFile('tests/fixtures/empty.ts')).toBe(parser);
         expect(parser.addExtractor(extractor2)).toBe(parser);
     });
 
@@ -161,7 +161,7 @@ export function registerCommonParserTests(parserClass: any): void {
         }).toThrowError(ERROR_MESSAGE);
 
         expect(() => {
-            parser.parseFile('tests/fixtures/foo.ts');
+            parser.parseFile('tests/fixtures/empty.ts');
         }).toThrowError(ERROR_MESSAGE);
 
         expect(() => {

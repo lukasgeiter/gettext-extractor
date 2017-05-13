@@ -1,0 +1,22 @@
+msgid ""
+msgstr "Content-Type: text/plain;\n"
+
+#: tests/e2e/fixtures/html/header.html:2
+msgid "Logo"
+msgstr ""
+
+#: tests/e2e/fixtures/html/header.html:4
+msgctxt "Menu"
+msgid "{{n}} notification"
+msgid_plural "{{n}} notifications"
+msgstr[0] ""
+
+#: tests/e2e/fixtures/html/header.html:6
+msgctxt "Menu"
+msgid "Logout"
+msgstr ""
+
+#: tests/e2e/fixtures/html/header.html:5
+msgctxt "Menu"
+msgid "Settings"
+msgstr ""
