@@ -165,7 +165,7 @@ describe('GettextExtractor', () => {
             test('extractors: null', () => {
                 expect(() => {
                     (<any>extractor.createJsParser)(null);
-                }).not.toThrow();
+                }).toThrowError(`Argument 'extractors' must be a non-empty array`);
             });
 
             test('extractors: wrong type', () => {

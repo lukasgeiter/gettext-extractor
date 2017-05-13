@@ -105,7 +105,7 @@ export class Validate {
     private each(args: Arguments, callback: (name: string, value: any) => void): void {
         for (let name of Object.keys(args)) {
             let value = args[name];
-            if (value !== undefined && (this.required || value !== null)) {
+            if (value !== undefined) {
                 callback(name, value);
             } else if (this.required) {
                 throw this.error(`Missing argument '${name}'`);
