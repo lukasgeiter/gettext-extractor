@@ -1,7 +1,7 @@
 {
     "name": "gettext-extractor",
     "version": "1.0.2",
-    "description": "Gettext extractor for JavaScript, TypeScript and JSX",
+    "description": "Gettext extractor for JavaScript, TypeScript, JSX and HTML",
     "author": "Lukas Geiter <info@lukasgeiter.com>",
     "repository": "lukasgeiter/gettext-extractor",
     "bugs": "https://github.com/lukasgeiter/gettext-extractor/issues",
