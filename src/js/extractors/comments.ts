@@ -17,27 +17,128 @@ export abstract class JsCommentUtils {
     public static extractComments(callExpression: ts.CallExpression, sourceFile: ts.SourceFile, commentOptions?: ICommentOptions): string[] {
         commentOptions = JsCommentUtils.defaultCommentOptions(commentOptions);
         let comments: string[] = [],
-            nodeStart = callExpression.parent.getFullStart(),
-            nodeEnd = callExpression.parent.getEnd(),
+            { start, end } = this.getExtractionPositions(callExpression, sourceFile),
             source = sourceFile.text;
 
         if (callExpression.parent.kind === ts.SyntaxKind.JsxExpression) {
-            nodeStart = callExpression.getFullStart();
-            nodeEnd = callExpression.getEnd();
-
-            source = sourceFile.text.slice(0, nodeStart) + '\n' + sourceFile.text.slice(nodeStart);
-            nodeEnd++;
+            source = source.slice(0, start) + '\n' + source.slice(start);
+            end++;
         }
 
         if (commentOptions.otherLineLeading || commentOptions.sameLineLeading) {
-            comments = comments.concat(JsCommentUtils.extractCommentsAtPosition(source, nodeStart, CommentEdge.Leading, commentOptions));
+            comments = comments.concat(JsCommentUtils.extractCommentsAtPosition(source, start, CommentEdge.Leading, commentOptions));
         }
 
         if (commentOptions.sameLineTrailing) {
-            comments = comments.concat(JsCommentUtils.extractCommentsAtPosition(source, nodeEnd, CommentEdge.Trailing, commentOptions));
+            comments = comments.concat(JsCommentUtils.extractCommentsAtPosition(source, end, CommentEdge.Trailing, commentOptions));
         }
 
         return comments;
+    }
+
+    private static getExtractionPositions(node: ts.Node, sourceFile: ts.SourceFile): {start: number, end: number} {
+
+        let start = node.getFullStart(),
+            end = node.getEnd();
+
+        function skipToCharacter(character: number): void {
+            scan: while (end < sourceFile.text.length) {
+                switch (sourceFile.text.charCodeAt(end)) {
+                    case character:
+                        end++;
+                        break scan;
+                    case 9: // tab
+                    case 11: // verticalTab
+                    case 12: // formFeed
+                    case 32: // space
+                        end++;
+                        break;
+                    default:
+                        break scan;
+                }
+            }
+        }
+
+        function skipToSemicolon(): void {
+            skipToCharacter(59);
+        }
+
+        function skipToComma(): void {
+            skipToCharacter(44);
+        }
+
+        switch (node.parent.kind) {
+            case ts.SyntaxKind.ReturnStatement:
+            case ts.SyntaxKind.ThrowStatement:
+            case ts.SyntaxKind.ExpressionStatement:
+            case ts.SyntaxKind.ParenthesizedExpression:
+                return this.getExtractionPositions(node.parent, sourceFile);
+
+            case ts.SyntaxKind.VariableDeclaration:
+                if (node.parent.parent.kind === ts.SyntaxKind.VariableDeclarationList) {
+                    let variableDeclarationList = (<ts.VariableDeclarationList>node.parent.parent);
+                    if (variableDeclarationList.declarations.length === 1) {
+                        return this.getExtractionPositions(variableDeclarationList.parent, sourceFile);
+                    } else {
+                        if (this.nodeIsOnSeparateLine(node, variableDeclarationList.declarations.map(d => d.initializer), sourceFile)) {
+                            if (variableDeclarationList.declarations[variableDeclarationList.declarations.length - 1].initializer === node) {
+                                skipToSemicolon();
+                            } else {
+                                skipToComma();
+                            }
+                        }
+                    }
+                }
+                break;
+
+            case ts.SyntaxKind.CallExpression:
+            case ts.SyntaxKind.NewExpression:
+                if (this.nodeIsOnSeparateLine(node, (<ts.CallExpression|ts.NewExpression>node.parent).arguments, sourceFile)) {
+                    skipToComma();
+                }
+                break;
+
+            case ts.SyntaxKind.PropertyAssignment:
+                if (node.parent.parent.kind === ts.SyntaxKind.ObjectLiteralExpression
+                    && this.nodeIsOnSeparateLine(node.parent, (<ts.ObjectLiteralExpression>node.parent.parent).properties, sourceFile)) {
+                    skipToComma();
+                }
+                break;
+
+            case ts.SyntaxKind.ArrayLiteralExpression:
+                if (this.nodeIsOnSeparateLine(node, (<ts.ArrayLiteralExpression>node.parent).elements, sourceFile)) {
+                    skipToComma();
+                }
+                break;
+
+            case ts.SyntaxKind.ConditionalExpression:
+                if ((<ts.ConditionalExpression>node.parent).whenFalse === node) {
+                    skipToSemicolon();
+                }
+                break;
+        }
+
+        return { start, end };
+    }
+
+    private static nodeIsOnSeparateLine(node: ts.Node, nodes: ts.Node[], sourceFile: ts.SourceFile): boolean {
+        let index = nodes.indexOf(node);
+        if (index === -1) {
+            return false;
+        }
+
+        let lineNumber = sourceFile.getLineAndCharacterOfPosition(nodes[index].getFullStart()).line;
+        if (index > 0) {
+            if (lineNumber === sourceFile.getLineAndCharacterOfPosition(nodes[index - 1].getEnd()).line) {
+                return false;
+            }
+        }
+        if (index + 1 < nodes.length) {
+            if (lineNumber === sourceFile.getLineAndCharacterOfPosition(nodes[index + 1].getFullStart()).line) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static extractCommentsAtPosition(source: string, position: number, edge: CommentEdge, commentOptions: ICommentOptions): string[] {
