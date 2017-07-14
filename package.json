@@ -40,10 +40,10 @@
     },
     "devDependencies": {
         "@types/glob": "^5.0.30",
-        "@types/jest": "^19.2.4",
-        "@types/node": "^7.0.27",
+        "@types/jest": "^20.0.2",
+        "@types/node": "^8.0.13",
         "jest": "^20.0.4",
-        "ts-jest": "^20.0.5",
-        "tslint": "^5.4.2"
+        "ts-jest": "^20.0.7",
+        "tslint": "^5.5.0"
     }
 }
