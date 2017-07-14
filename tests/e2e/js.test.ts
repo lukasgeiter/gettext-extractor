@@ -24,6 +24,6 @@ describe('JavaScript E2E', () => {
             ])
             .parseFilesGlob('tests/e2e/fixtures/js/**/*.@(js|jsx)');
 
-        expect(extractor.toPotString()).toBe(fs.readFileSync(__dirname + '/fixtures/js/example.expected.pot').toString().trim());
+        expect(extractor.getPotString()).toBe(fs.readFileSync(__dirname + '/fixtures/js/example.expected.pot').toString());
     });
 });

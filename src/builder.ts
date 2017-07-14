@@ -1,18 +1,5 @@
 import { IGettextExtractorStats } from './extractor';
 
-export interface IGettextMessage {
-    msgid: string;
-    msgid_plural?: string;
-    msgctxt?: string;
-    comments?: {
-        reference?: string;
-        extracted?: string;
-    };
-}
-
-export type IGettextMessageMap = {[text: string]: IGettextMessage};
-export type IGettextContextMap = {[context: string]: IGettextMessageMap};
-
 export interface IMessage {
     text: string;
     textPlural?: string;
@@ -21,14 +8,21 @@ export interface IMessage {
     comments?: string[];
 }
 
+export interface IContext {
+    name: string;
+    messages: IMessage[];
+}
+
 export type IMessageMap = {[text: string]: IMessage};
 export type IContextMap = {[context: string]: IMessageMap};
 
 export class CatalogBuilder {
 
-    private static readonly DEFAULT_CONTEXT: string = '';
-
     private contexts: IContextMap = {};
+
+    private static compareStrings(a: string, b: string): number {
+        return a.localeCompare(b);
+    }
 
     private static concatUnique(array: any[], items: any[]): any[] {
         array = array || [];
@@ -55,37 +49,10 @@ export class CatalogBuilder {
         return CatalogBuilder.extendMessage({
             text: null,
             textPlural: null,
-            context: CatalogBuilder.DEFAULT_CONTEXT,
+            context: null,
             references: [],
             comments: []
         }, message);
-    }
-
-    private static convertMessageToGettext(message: IMessage): IGettextMessage {
-        let gettext: IGettextMessage = {
-            msgid: message.text
-        };
-
-        if (message.textPlural) {
-            gettext.msgid_plural = message.textPlural;
-        }
-
-        if (message.context !== CatalogBuilder.DEFAULT_CONTEXT) {
-            gettext.msgctxt = message.context;
-        }
-
-        if (message.references.length || message.comments.length) {
-            gettext.comments = {};
-
-            if (message.references.length) {
-                gettext.comments.reference = message.references.join('\n');
-            }
-            if (message.comments.length) {
-                gettext.comments.extracted = message.comments.join('\n');
-            }
-        }
-
-        return gettext;
     }
 
     constructor(
@@ -94,7 +61,7 @@ export class CatalogBuilder {
 
     public addMessage(message: IMessage): void {
         message = CatalogBuilder.normalizeMessage(message);
-        let context = this.getOrCreateContext(message.context);
+        let context = this.getOrCreateContext(message.context || '');
         if (context[message.text]) {
             if (message.textPlural && context[message.text].textPlural && context[message.text].textPlural !== message.textPlural) {
                 throw new Error(`Incompatible plurals found for '${message.text}' ('${context[message.text].textPlural}' and '${message.textPlural}')`);
@@ -117,19 +84,31 @@ export class CatalogBuilder {
         this.stats && this.stats.numberOfMessageUsages++;
     }
 
-    public toGettextMessages(): IGettextContextMap {
-        function compareStrings(a: string, b: string): number {
-            return a.localeCompare(b);
+    public getMessages(): IMessage[] {
+        let messages: IMessage[] = [];
+        for (let context of Object.keys(this.contexts).sort(CatalogBuilder.compareStrings)) {
+            messages = messages.concat(this.getMessagesByContext(context));
         }
+        return messages;
+    }
 
-        let gettext: IGettextContextMap = {};
-        for (let contextName of Object.keys(this.contexts).sort(compareStrings)) {
-            gettext[contextName] = {};
-            for (let text of Object.keys(this.contexts[contextName]).sort(compareStrings)) {
-                gettext[contextName][text] = CatalogBuilder.convertMessageToGettext(this.contexts[contextName][text]);
-            }
+    public getContexts(): IContext[] {
+        let contexts: IContext[] = [];
+        for (let context of Object.keys(this.contexts).sort(CatalogBuilder.compareStrings)) {
+            contexts.push({
+                name: context,
+                messages: this.getMessagesByContext(context)
+            });
         }
-        return gettext;
+        return contexts;
+    }
+
+    public getMessagesByContext(context: string): IMessage[] {
+        let messages = this.contexts[context];
+        if (!messages) {
+            return [];
+        }
+        return Object.keys(messages).sort(CatalogBuilder.compareStrings).map(text => messages[text]);
     }
 
     private getOrCreateContext(context: string): IMessageMap {

@@ -18,7 +18,7 @@ describe('HTML E2E', () => {
             ])
             .parseFile('tests/e2e/fixtures/html/header.html');
 
-        expect(extractor.toPotString()).toBe(fs.readFileSync(__dirname + '/fixtures/html/example.expected.pot').toString().trim());
+        expect(extractor.getPotString()).toBe(fs.readFileSync(__dirname + '/fixtures/html/example.expected.pot').toString());
     });
 
     test('embedded js', () => {
@@ -38,6 +38,6 @@ describe('HTML E2E', () => {
             ])
             .parseFile('tests/e2e/fixtures/html/embeddedJs.html');
 
-        expect(extractor.toPotString()).toBe(fs.readFileSync(__dirname + '/fixtures/html/embeddedJs.expected.pot').toString().trim());
+        expect(extractor.getPotString()).toBe(fs.readFileSync(__dirname + '/fixtures/html/embeddedJs.expected.pot').toString());
     });
 });

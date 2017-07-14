@@ -1,7 +1,7 @@
 import * as fs from 'fs';
-import * as gettextParser from 'gettext-parser';
+import * as pofile from 'pofile';
 
-import { CatalogBuilder, IGettextContextMap, IMessage } from './builder';
+import { CatalogBuilder, IContext, IMessage } from './builder';
 import { JsParser, IJsExtractorFunction } from './js/parser';
 import { HtmlParser, IHtmlExtractorFunction } from './html/parser';
 import { StatsOutput } from './utils/output';
@@ -55,25 +55,36 @@ export class GettextExtractor {
         this.builder.addMessage(message);
     }
 
-    public toGettextMessages(): IGettextContextMap {
-        return this.builder.toGettextMessages();
+    public getMessages(): IMessage[] {
+        return this.builder.getMessages();
     }
 
-    public toPotString(): string {
-        return gettextParser.po.compile({translations: this.toGettextMessages(), charset: 'UTF-8'}).toString();
+    public getContexts(): IContext[] {
+        return this.builder.getContexts();
+    }
+
+    public getMessagesByContext(context: string): IMessage[] {
+        return this.builder.getMessagesByContext(context);
+    }
+
+    public getPotString(): string {
+        let po = new (<any>pofile)();
+        po.items = this.getPofileItems();
+        po.headers['Content-Type'] = 'text/plain; charset=UTF-8';
+        return po.toString();
     }
 
     public savePotFile(fileName: string): void {
         Validate.required.nonEmptyString({fileName});
 
-        fs.writeFileSync(fileName, this.toPotString());
+        fs.writeFileSync(fileName, this.getPotString());
     }
 
     public savePotFileAsync(fileName: string): Promise<any> {
         Validate.required.nonEmptyString({fileName});
 
         return new Promise((resolve, reject) => {
-            fs.writeFile(fileName, this.toPotString(), (error) => {
+            fs.writeFile(fileName, this.getPotString(), (error) => {
                 if (error) {
                     return reject(error);
                 }
@@ -88,5 +99,19 @@ export class GettextExtractor {
 
     public printStats(): void {
         new StatsOutput(this.getStats()).print();
+    }
+
+    private getPofileItems(): pofile.Item[] {
+        return this.getMessages().map(message => {
+            let item = new pofile.Item();
+
+            item.msgid = message.text;
+            item.msgid_plural = message.textPlural;
+            item.msgctxt = message.context;
+            item.references = message.references;
+            item.extractedComments = message.comments;
+
+            return item;
+        });
     }
 }

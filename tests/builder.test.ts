@@ -27,16 +27,22 @@ describe('CatalogBuilder', () => {
             text: 'Bar'
         });
 
-        expect(builder.toGettextMessages()).toEqual({
-            '': {
-                'Foo': {
-                    msgid: 'Foo'
-                },
-                'Bar': {
-                    msgid: 'Bar'
-                }
+        expect(builder.getMessages()).toEqual([
+            {
+                text: 'Bar',
+                textPlural: null,
+                context: null,
+                comments: [],
+                references: []
+            },
+            {
+                text: 'Foo',
+                textPlural: null,
+                context: null,
+                comments: [],
+                references: []
             }
-        });
+        ]);
     });
 
     test('singular and plural messages', () => {
@@ -48,17 +54,22 @@ describe('CatalogBuilder', () => {
             textPlural: 'Bars'
         });
 
-        expect(builder.toGettextMessages()).toEqual({
-            '': {
-                'Foo': {
-                    msgid: 'Foo'
-                },
-                'Bar': {
-                    msgid: 'Bar',
-                    msgid_plural: 'Bars'
-                }
+        expect(builder.getMessages()).toEqual([
+            {
+                text: 'Bar',
+                textPlural: 'Bars',
+                context: null,
+                comments: [],
+                references: []
+            },
+            {
+                text: 'Foo',
+                textPlural: null,
+                context: null,
+                comments: [],
+                references: []
             }
-        });
+        ]);
     });
 
     test('colliding basic singular and plural messages', () => {
@@ -70,14 +81,15 @@ describe('CatalogBuilder', () => {
             text: 'Foo'
         });
 
-        expect(builder.toGettextMessages()).toEqual({
-            '': {
-                'Foo': {
-                    msgid: 'Foo',
-                    msgid_plural: 'Foos'
-                }
+        expect(builder.getMessages()).toEqual([
+            {
+                text: 'Foo',
+                textPlural: 'Foos',
+                context: null,
+                comments: [],
+                references: []
             }
-        });
+        ]);
     });
 
     test('contexts', () => {
@@ -89,19 +101,22 @@ describe('CatalogBuilder', () => {
             context: 'Context1'
         });
 
-        expect(builder.toGettextMessages()).toEqual({
-            '': {
-                'Foo': {
-                    msgid: 'Foo'
-                }
+        expect(builder.getMessages()).toEqual([
+            {
+                text: 'Foo',
+                textPlural: null,
+                context: null,
+                comments: [],
+                references: []
             },
-            'Context1': {
-                'Foo': {
-                    msgid: 'Foo',
-                    msgctxt: 'Context1'
-                }
+            {
+                text: 'Foo',
+                textPlural: null,
+                context: 'Context1',
+                comments: [],
+                references: []
             }
-        });
+        ]);
     });
 
     test('references', () => {
@@ -114,22 +129,22 @@ describe('CatalogBuilder', () => {
             references: ['bar.ts:13']
         });
 
-        expect(builder.toGettextMessages()).toEqual({
-            '': {
-                'Foo': {
-                    msgid: 'Foo',
-                    comments: {
-                        reference: 'foo.ts:4'
-                    }
-                },
-                'Bar': {
-                    msgid: 'Bar',
-                    comments: {
-                        reference: 'bar.ts:13'
-                    }
-                }
+        expect(builder.getMessages()).toEqual([
+            {
+                text: 'Bar',
+                textPlural: null,
+                context: null,
+                comments: [],
+                references: ['bar.ts:13']
+            },
+            {
+                text: 'Foo',
+                textPlural: null,
+                context: null,
+                comments: [],
+                references: ['foo.ts:4']
             }
-        });
+        ]);
     });
 
     test('multiple references', () => {
@@ -153,28 +168,29 @@ describe('CatalogBuilder', () => {
             references: ['baz.ts:12']
         });
 
-        expect(builder.toGettextMessages()).toEqual({
-            '': {
-                'Foo': {
-                    msgid: 'Foo',
-                    comments: {
-                        reference: 'foo.ts:4\nfoo.ts:7'
-                    }
-                },
-                'Bar': {
-                    msgid: 'Bar',
-                    comments: {
-                        reference: 'bar.ts:13\nbar.ts:28'
-                    }
-                },
-                'Baz': {
-                    msgid: 'Baz',
-                    comments: {
-                        reference: 'baz.ts:12'
-                    }
-                }
+        expect(builder.getMessages()).toEqual([
+            {
+                text: 'Bar',
+                textPlural: null,
+                context: null,
+                comments: [],
+                references: ['bar.ts:13', 'bar.ts:28']
+            },
+            {
+                text: 'Baz',
+                textPlural: null,
+                context: null,
+                comments: [],
+                references: ['baz.ts:12']
+            },
+            {
+                text: 'Foo',
+                textPlural: null,
+                context: null,
+                comments: [],
+                references: ['foo.ts:4', 'foo.ts:7']
             }
-        });
+        ]);
     });
 
     test('comments', () => {
@@ -187,22 +203,22 @@ describe('CatalogBuilder', () => {
             comments: ['Comment about Bar']
         });
 
-        expect(builder.toGettextMessages()).toEqual({
-            '': {
-                'Foo': {
-                    msgid: 'Foo',
-                    comments: {
-                        extracted: 'Comment about Foo'
-                    }
-                },
-                'Bar': {
-                    msgid: 'Bar',
-                    comments: {
-                        extracted: 'Comment about Bar'
-                    }
-                }
+        expect(builder.getMessages()).toEqual([
+            {
+                text: 'Bar',
+                textPlural: null,
+                context: null,
+                comments: ['Comment about Bar'],
+                references: []
+            },
+            {
+                text: 'Foo',
+                textPlural: null,
+                context: null,
+                comments: ['Comment about Foo'],
+                references: []
             }
-        });
+        ]);
     });
 
     test('multiple comments', () => {
@@ -226,28 +242,29 @@ describe('CatalogBuilder', () => {
             comments: ['Comment about Baz']
         });
 
-        expect(builder.toGettextMessages()).toEqual({
-            '': {
-                'Foo': {
-                    msgid: 'Foo',
-                    comments: {
-                        extracted: 'Comment1 about Foo\nComment2 about Foo'
-                    }
-                },
-                'Bar': {
-                    msgid: 'Bar',
-                    comments: {
-                        extracted: 'Comment1 about Bar\nComment2 about Bar'
-                    }
-                },
-                'Baz': {
-                    msgid: 'Baz',
-                    comments: {
-                        extracted: 'Comment about Baz'
-                    }
-                }
+        expect(builder.getMessages()).toEqual([
+            {
+                text: 'Bar',
+                textPlural: null,
+                context: null,
+                comments: ['Comment1 about Bar', 'Comment2 about Bar'],
+                references: []
+            },
+            {
+                text: 'Baz',
+                textPlural: null,
+                context: null,
+                comments: ['Comment about Baz'],
+                references: []
+            },
+            {
+                text: 'Foo',
+                textPlural: null,
+                context: null,
+                comments: ['Comment1 about Foo', 'Comment2 about Foo'],
+                references: []
             }
-        });
+        ]);
     });
 
     test('combination of different tests', () => {
@@ -298,42 +315,36 @@ describe('CatalogBuilder', () => {
             references: ['bar.ts:3']
         });
 
-        expect(builder.toGettextMessages()).toEqual({
-            '': {
-                'Foo': {
-                    msgid: 'Foo',
-                    msgid_plural: 'Foos',
-                    comments: {
-                        reference: 'foo.ts:12\nfoo.ts:16\nfoo.ts:30',
-                        extracted: 'Comment1 about Foo\nComment2 about Foo'
-                    }
-                }
+        expect(builder.getMessages()).toEqual([
+            {
+                text: 'Foo',
+                textPlural: 'Foos',
+                context: null,
+                comments: ['Comment1 about Foo', 'Comment2 about Foo'],
+                references: ['foo.ts:12', 'foo.ts:16', 'foo.ts:30']
             },
-            'Context1': {
-                'Foo': {
-                    msgid: 'Foo',
-                    msgid_plural: 'Foos',
-                    msgctxt: 'Context1',
-                    comments: {
-                        reference: 'foo.ts:16'
-                    }
-                },
-                'Bar': {
-                    msgid: 'Bar',
-                    msgctxt: 'Context1'
-                }
+            {
+                text: 'Bar',
+                textPlural: null,
+                context: 'Context1',
+                comments: [],
+                references: []
             },
-            'Context2': {
-                'Bar': {
-                    msgid: 'Bar',
-                    msgctxt: 'Context2',
-                    comments: {
-                        reference: 'bar.ts:3',
-                        extracted: 'Comment1 about Bar\nComment2 about Bar'
-                    }
-                }
+            {
+                text: 'Foo',
+                textPlural: 'Foos',
+                context: 'Context1',
+                comments: [],
+                references: ['foo.ts:16']
+            },
+            {
+                text: 'Bar',
+                textPlural: null,
+                context: 'Context2',
+                comments: ['Comment1 about Bar', 'Comment2 about Bar'],
+                references: ['bar.ts:3']
             }
-        });
+        ]);
     });
 
     test('alphabetical order of messages', () => {
@@ -354,28 +365,36 @@ describe('CatalogBuilder', () => {
             context: 'A'
         });
 
-        expect(builder.toGettextMessages()).toEqual({
-            'A': {
-                'A': {
-                    msgid: 'A',
-                    msgctxt: 'A'
-                },
-                'B': {
-                    msgid: 'B',
-                    msgctxt: 'A'
-                }
+        expect(builder.getMessages()).toEqual([
+            {
+                text: 'A',
+                textPlural: null,
+                context: 'A',
+                comments: [],
+                references: []
             },
-            'B': {
-                'A': {
-                    msgid: 'A',
-                    msgctxt: 'B'
-                },
-                'B': {
-                    msgid: 'B',
-                    msgctxt: 'B'
-                }
+            {
+                text: 'B',
+                textPlural: null,
+                context: 'A',
+                comments: [],
+                references: []
+            },
+            {
+                text: 'A',
+                textPlural: null,
+                context: 'B',
+                comments: [],
+                references: []
+            },
+            {
+                text: 'B',
+                textPlural: null,
+                context: 'B',
+                comments: [],
+                references: []
             }
-        });
+        ]);
     });
 
     test('incompatible plurals', () => {
@@ -403,16 +422,15 @@ describe('CatalogBuilder', () => {
             references: ['foo.ts:42']
         });
 
-        expect(builder.toGettextMessages()).toEqual({
-            '': {
-                'Foo': {
-                    msgid: 'Foo',
-                    comments: {
-                        reference: 'foo.ts:42'
-                    }
-                }
+        expect(builder.getMessages()).toEqual([
+            {
+                text: 'Foo',
+                textPlural: null,
+                context: null,
+                comments: [],
+                references: ['foo.ts:42']
             }
-        });
+        ]);
     });
 
     test('duplicate comments', () => {
@@ -426,15 +444,287 @@ describe('CatalogBuilder', () => {
             comments: ['Comment about Foo']
         });
 
-        expect(builder.toGettextMessages()).toEqual({
-            '': {
-                'Foo': {
-                    msgid: 'Foo',
-                    comments: {
-                        extracted: 'Comment about Foo'
-                    }
-                }
+        expect(builder.getMessages()).toEqual([
+            {
+                text: 'Foo',
+                textPlural: null,
+                context: null,
+                comments: ['Comment about Foo'],
+                references: []
             }
+        ]);
+    });
+
+    describe('getContexts', () => {
+
+        test('only default context', () => {
+            builder.addMessage({
+                text: 'Foo'
+            });
+
+            builder.addMessage({
+                text: 'Bar'
+            });
+
+            expect(builder.getContexts()).toEqual([
+                {
+                    name: '',
+                    messages: [
+                        {
+                            text: 'Bar',
+                            textPlural: null,
+                            context: null,
+                            comments: [],
+                            references: []
+                        },
+                        {
+                            text: 'Foo',
+                            textPlural: null,
+                            context: null,
+                            comments: [],
+                            references: []
+                        }
+                    ]
+                }
+            ]);
+        });
+
+        test('multiple contexts', () => {
+            builder.addMessage({
+                text: 'Foo'
+            });
+
+            builder.addMessage({
+                text: 'Bar',
+                context: 'Context1'
+            });
+
+            builder.addMessage({
+                text: 'Baz',
+                context: 'Context2'
+            });
+
+            expect(builder.getContexts()).toEqual([
+                {
+                    name: '',
+                    messages: [
+                        {
+                            text: 'Foo',
+                            textPlural: null,
+                            context: null,
+                            comments: [],
+                            references: []
+                        }
+                    ]
+                },
+                {
+                    name: 'Context1',
+                    messages: [
+                        {
+                            text: 'Bar',
+                            textPlural: null,
+                            context: 'Context1',
+                            comments: [],
+                            references: []
+                        }
+                    ]
+                },
+                {
+                    name: 'Context2',
+                    messages: [
+                        {
+                            text: 'Baz',
+                            textPlural: null,
+                            context: 'Context2',
+                            comments: [],
+                            references: []
+                        }
+                    ]
+                }
+            ]);
+        });
+
+        test('no default context', () => {
+            builder.addMessage({
+                text: 'Foo',
+                context: 'Context1'
+            });
+
+            builder.addMessage({
+                text: 'Bar',
+                context: 'Context2'
+            });
+
+            builder.addMessage({
+                text: 'Baz',
+                context: 'Context2'
+            });
+
+            expect(builder.getContexts()).toEqual([
+                {
+                    name: 'Context1',
+                    messages: [
+                        {
+                            text: 'Foo',
+                            textPlural: null,
+                            context: 'Context1',
+                            comments: [],
+                            references: []
+                        }
+                    ]
+                },
+                {
+                    name: 'Context2',
+                    messages: [
+                        {
+                            text: 'Bar',
+                            textPlural: null,
+                            context: 'Context2',
+                            comments: [],
+                            references: []
+                        },
+                        {
+                            text: 'Baz',
+                            textPlural: null,
+                            context: 'Context2',
+                            comments: [],
+                            references: []
+                        }
+                    ]
+                }
+            ]);
+        });
+    });
+
+    describe('getMessagesByContext', () => {
+
+        test('only default context', () => {
+            builder.addMessage({
+                text: 'Foo'
+            });
+
+            builder.addMessage({
+                text: 'Bar'
+            });
+
+            expect(builder.getMessagesByContext('')).toEqual([
+                {
+                    text: 'Bar',
+                    textPlural: null,
+                    context: null,
+                    comments: [],
+                    references: []
+                },
+                {
+                    text: 'Foo',
+                    textPlural: null,
+                    context: null,
+                    comments: [],
+                    references: []
+                }
+            ]);
+        });
+
+        test('multiple contexts', () => {
+            builder.addMessage({
+                text: 'Foo'
+            });
+
+            builder.addMessage({
+                text: 'Bar',
+                context: 'Context1'
+            });
+
+            builder.addMessage({
+                text: 'Baz',
+                context: 'Context2'
+            });
+
+            expect(builder.getMessagesByContext('')).toEqual([
+                {
+                    text: 'Foo',
+                    textPlural: null,
+                    context: null,
+                    comments: [],
+                    references: []
+                }
+            ]);
+
+            expect(builder.getMessagesByContext('Context1')).toEqual([
+                {
+                    text: 'Bar',
+                    textPlural: null,
+                    context: 'Context1',
+                    comments: [],
+                    references: []
+                }
+            ]);
+
+            expect(builder.getMessagesByContext('Context2')).toEqual([
+                {
+                    text: 'Baz',
+                    textPlural: null,
+                    context: 'Context2',
+                    comments: [],
+                    references: []
+                }
+            ]);
+        });
+
+        test('no default context', () => {
+            builder.addMessage({
+                text: 'Foo',
+                context: 'Context1'
+            });
+
+            builder.addMessage({
+                text: 'Bar',
+                context: 'Context2'
+            });
+
+            builder.addMessage({
+                text: 'Baz',
+                context: 'Context2'
+            });
+
+            expect(builder.getMessagesByContext('Context1')).toEqual([
+                {
+                    text: 'Foo',
+                    textPlural: null,
+                    context: 'Context1',
+                    comments: [],
+                    references: []
+                }
+            ]);
+
+            expect(builder.getMessagesByContext('Context2')).toEqual([
+                {
+                    text: 'Bar',
+                    textPlural: null,
+                    context: 'Context2',
+                    comments: [],
+                    references: []
+                },
+                {
+                    text: 'Baz',
+                    textPlural: null,
+                    context: 'Context2',
+                    comments: [],
+                    references: []
+                }
+            ]);
+        });
+
+        test('inexistent context', () => {
+            builder.addMessage({
+                text: 'Foo'
+            });
+
+            builder.addMessage({
+                text: 'Bar'
+            });
+
+            expect(builder.getMessagesByContext('Context')).toEqual([]);
         });
     });
 
@@ -458,9 +748,9 @@ describe('CatalogBuilder', () => {
             });
 
             expect(stats.numberOfMessageUsages).toBe(4);
-            expect( stats.numberOfMessages).toBe(2);
-            expect( stats.numberOfPluralMessages).toBe(0);
-            expect( stats.numberOfContexts).toBe(1);
+            expect(stats.numberOfMessages).toBe(2);
+            expect(stats.numberOfPluralMessages).toBe(0);
+            expect(stats.numberOfContexts).toBe(1);
         });
 
         test('plurals', () => {

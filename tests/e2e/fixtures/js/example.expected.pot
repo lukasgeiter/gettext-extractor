@@ -1,13 +1,15 @@
 msgid ""
-msgstr "Content-Type: text/plain;\n"
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
 
 #: tests/e2e/fixtures/js/view.jsx:22
 msgid "One new message"
 msgid_plural "{{n}} new messages"
 msgstr[0] ""
+msgstr[1] ""
 
-#: tests/e2e/fixtures/js/view.jsx:14
 #. Comment
+#: tests/e2e/fixtures/js/view.jsx:14
 msgid "Refresh"
 msgstr ""
 

@@ -1,5 +1,6 @@
 msgid ""
-msgstr "Content-Type: text/plain;\n"
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
 
 #: tests/e2e/fixtures/html/header.html:2
 msgid "Logo"
@@ -10,6 +11,7 @@ msgctxt "Menu"
 msgid "{{n}} notification"
 msgid_plural "{{n}} notifications"
 msgstr[0] ""
+msgstr[1] ""
 
 #: tests/e2e/fixtures/html/header.html:6
 msgctxt "Menu"
