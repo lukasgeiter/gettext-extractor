@@ -108,7 +108,7 @@ export class GettextExtractor {
             item.msgid = message.text;
             item.msgid_plural = message.textPlural;
             item.msgctxt = message.context;
-            item.references = message.references;
+            item.references = message.references.sort((a, b) => a.localeCompare(b));
             item.extractedComments = message.comments;
 
             return item;
