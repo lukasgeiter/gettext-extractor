@@ -8,6 +8,41 @@ describe('GettextExtractor', () => {
         extractor = new GettextExtractor();
     });
 
+    describe('POT string', () => {
+
+        test('default headers', () => {
+            let pot = extractor.getPotString();
+            expect(pot).toBe(
+                `msgid ""\n` +
+                `msgstr ""\n` +
+                `"Content-Type: text/plain; charset=UTF-8\\n"\n`
+            );
+        });
+
+        test('additional headers', () => {
+            let pot = extractor.getPotString({
+                'Project-Id-Version': 'Foo'
+            });
+            expect(pot).toBe(
+                `msgid ""\n` +
+                `msgstr ""\n` +
+                `"Project-Id-Version: Foo\\n"\n` +
+                `"Content-Type: text/plain; charset=UTF-8\\n"\n`
+            );
+        });
+
+        test('overridden content type header', () => {
+            let pot = extractor.getPotString({
+                'Content-Type': 'text/plain; charset=ISO-8859-1'
+            });
+            expect(pot).toBe(
+                `msgid ""\n` +
+                `msgstr ""\n` +
+                `"Content-Type: text/plain; charset=ISO-8859-1\\n"\n`
+            );
+        });
+    });
+
     describe('argument validation', () => {
 
         describe('addMessage', () => {
@@ -133,6 +168,15 @@ describe('GettextExtractor', () => {
             });
         });
 
+        describe('getPotString', () => {
+
+            test('headers: wrong type', () => {
+                expect(() => {
+                    (<any>extractor.getPotString)('foo');
+                }).toThrowError(`Argument 'headers' must be an object`);
+            });
+        });
+
         describe('savePotFile', () => {
 
             test('fileName: (none)', () => {
@@ -141,16 +185,22 @@ describe('GettextExtractor', () => {
                 }).toThrowError(`Missing argument 'fileName'`);
             });
 
-            test('message: null', () => {
+            test('fileName: null', () => {
                 expect(() => {
                     (<any>extractor.savePotFile)(null);
                 }).toThrowError(`Argument 'fileName' must be a non-empty string`);
             });
 
-            test('message: wrong type', () => {
+            test('fileName: wrong type', () => {
                 expect(() => {
                     (<any>extractor.savePotFile)(42);
                 }).toThrowError(`Argument 'fileName' must be a non-empty string`);
+            });
+
+            test('headers: wrong type', () => {
+                expect(() => {
+                    (<any>extractor.savePotFile)('foo.ts', 'foo');
+                }).toThrowError(`Argument 'headers' must be an object`);
             });
         });
 
@@ -162,16 +212,22 @@ describe('GettextExtractor', () => {
                 }).toThrowError(`Missing argument 'fileName'`);
             });
 
-            test('message: null', () => {
+            test('fileName: null', () => {
                 expect(() => {
                   (<any>extractor.savePotFileAsync)(null);
                 }).toThrowError(`Argument 'fileName' must be a non-empty string`);
             });
 
-            test('message: wrong type', () => {
+            test('fileName: wrong type', () => {
                 expect(() => {
                   (<any>extractor.savePotFileAsync)(42);
                 }).toThrowError(`Argument 'fileName' must be a non-empty string`);
+            });
+
+            test('headers: wrong type', () => {
+                expect(() => {
+                    (<any>extractor.savePotFileAsync)('foo.ts', 'foo');
+                }).toThrowError(`Argument 'headers' must be an object`);
             });
         });
 

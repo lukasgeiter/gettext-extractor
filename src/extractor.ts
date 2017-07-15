@@ -67,24 +67,29 @@ export class GettextExtractor {
         return this.builder.getMessagesByContext(context);
     }
 
-    public getPotString(): string {
+    public getPotString(headers: Partial<pofile.IHeaders> = {}): string {
+        Validate.optional.object({headers});
+
         let po = new (<any>pofile)();
         po.items = this.getPofileItems();
-        po.headers['Content-Type'] = 'text/plain; charset=UTF-8';
+        po.headers = headers;
+        po.headers['Content-Type'] = po.headers['Content-Type'] || 'text/plain; charset=UTF-8';
         return po.toString();
     }
 
-    public savePotFile(fileName: string): void {
+    public savePotFile(fileName: string, headers?: Partial<pofile.IHeaders>): void {
         Validate.required.nonEmptyString({fileName});
+        Validate.optional.object({headers});
 
-        fs.writeFileSync(fileName, this.getPotString());
+        fs.writeFileSync(fileName, this.getPotString(headers));
     }
 
-    public savePotFileAsync(fileName: string): Promise<any> {
+    public savePotFileAsync(fileName: string, headers?: Partial<pofile.IHeaders>): Promise<any> {
         Validate.required.nonEmptyString({fileName});
+        Validate.optional.object({headers});
 
         return new Promise((resolve, reject) => {
-            fs.writeFile(fileName, this.getPotString(), (error) => {
+            fs.writeFile(fileName, this.getPotString(headers), (error) => {
                 if (error) {
                     return reject(error);
                 }
