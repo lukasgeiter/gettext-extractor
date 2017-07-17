@@ -455,6 +455,34 @@ describe('CatalogBuilder', () => {
         ]);
     });
 
+    test('empty text', () => {
+        builder.addMessage({
+            text: ''
+        });
+
+        builder.addMessage({
+            text: 'Foo',
+            textPlural: ''
+        });
+
+        expect(builder.getMessages()).toEqual([
+            {
+                text: '',
+                textPlural: null,
+                context: null,
+                comments: [],
+                references: []
+            },
+            {
+                text: 'Foo',
+                textPlural: '',
+                context: null,
+                comments: [],
+                references: []
+            }
+        ]);
+    });
+
     describe('getContexts', () => {
 
         test('only default context', () => {

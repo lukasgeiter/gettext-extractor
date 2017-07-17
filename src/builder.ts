@@ -36,8 +36,8 @@ export class CatalogBuilder {
 
     private static extendMessage(message: IMessage, data: IMessage): IMessage {
 
-        message.text = data.text || message.text;
-        message.textPlural = data.textPlural || message.textPlural;
+        message.text = typeof data.text === 'string' ? data.text : message.text;
+        message.textPlural = typeof data.textPlural === 'string' ? data.textPlural : message.textPlural;
         message.context = typeof data.context === 'string' ? data.context : message.context;
         message.references = CatalogBuilder.concatUnique(message.references, data.references);
         message.comments = CatalogBuilder.concatUnique(message.comments, data.comments);
