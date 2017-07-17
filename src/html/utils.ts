@@ -22,6 +22,12 @@ export abstract class HtmlUtils {
     public static getElementContent(element: Element, options: IElementContentOptions): string {
         let content = parse5.serialize(element, {});
 
+        // Un-escape characters that get escaped by parse5
+        content = content
+            .replace(/&amp;/g, '&')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>');
+
         if (options.trimWhiteSpace) {
             content = content.replace(/^\n+|\s+$/g, '');
         }

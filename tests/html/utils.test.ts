@@ -435,6 +435,21 @@ describe('HTML: Utils', () => {
                 expect(getContent(MULTIPLE_CHILD_ELEMENTS_INDENTED_TABS)).toBe('\t<div> \t\t<p>Foo</p> \t\t<p>Bar</p> \t</div>');
             });
         });
+
+        describe('un-escaping', () => {
+
+            test('&', () => {
+                expect(getContent('<div>Foo & Bar</div>')).toBe('Foo & Bar');
+            });
+
+            test('<', () => {
+                expect(getContent('<div>Foo < Bar</div>')).toBe('Foo < Bar');
+            });
+
+            test('>', () => {
+                expect(getContent('<div>Foo > Bar</div>')).toBe('Foo > Bar');
+            });
+        });
     }
 
     describe('getElementContent', () => {
