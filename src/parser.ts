@@ -18,6 +18,7 @@ export type IAddMessageCallback = (data: IMessageData) => void;
 
 export interface IParseOptions {
     lineNumberStart?: number;
+    transformSource?: (source: string) => string;
 }
 
 export abstract class Parser<TExtractorFunction extends Function, TParseOptions extends IParseOptions> {
@@ -67,6 +68,10 @@ export abstract class Parser<TExtractorFunction extends Function, TParseOptions 
             throw new Error(`Missing extractor functions. Provide them when creating the parser or dynamically add extractors using 'addExtractor()'`);
         }
 
+        if (options && options.transformSource) {
+            source = options.transformSource(source);
+        }
+
         let messages = this.parse(source, fileName || Parser.STRING_LITERAL_FILENAME, options);
 
         for (let message of messages) {
@@ -113,6 +118,7 @@ export abstract class Parser<TExtractorFunction extends Function, TParseOptions 
 
     protected validateParseOptions(options: TParseOptions): void {
         Validate.optional.numberProperty(options, 'options.lineNumberStart');
+        Validate.optional.functionProperty(options, 'options.transformSource');
     }
 
     protected validateExtractors(...extractors: TExtractorFunction[]): void {

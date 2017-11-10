@@ -208,6 +208,14 @@ export function registerCommonParserTests(parserClass: any): void {
                     });
                 }).toThrowError(`Property 'options.lineNumberStart' must be a number`);
             });
+
+            test('options.transformSource: wrong type', () => {
+                expect(() => {
+                    (<any>parser.parseFile)('foo.ts', {
+                        transformSource: 42
+                    });
+                }).toThrowError(`Property 'options.transformSource' must be a function`);
+            });
         });
 
         describe('parseFilesGlob', () => {
@@ -248,6 +256,14 @@ export function registerCommonParserTests(parserClass: any): void {
                         lineNumberStart: 'foo'
                     });
                 }).toThrowError(`Property 'options.lineNumberStart' must be a number`);
+            });
+
+            test('options.transformSource: wrong type', () => {
+                expect(() => {
+                    (<any>parser.parseFile)('foo.ts', {
+                        transformSource: 42
+                    });
+                }).toThrowError(`Property 'options.transformSource' must be a function`);
             });
         });
 
@@ -295,6 +311,14 @@ export function registerCommonParserTests(parserClass: any): void {
                         lineNumberStart: 'bar'
                     });
                 }).toThrowError(`Property 'options.lineNumberStart' must be a number`);
+            });
+
+            test('options.transformSource: wrong type', () => {
+                expect(() => {
+                    (<any>parser.parseFile)('foo.ts', {
+                        transformSource: 42
+                    });
+                }).toThrowError(`Property 'options.transformSource' must be a function`);
             });
         });
 

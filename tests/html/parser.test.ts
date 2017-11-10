@@ -55,6 +55,19 @@ describe('HtmlParser', () => {
         });
     });
 
+    test('transform source function', () => {
+        let parser = new HtmlParser(<any>{}, [jest.fn()]);
+        let parseFunctionMock = (<any>parser).parse = jest.fn(() => []);
+
+        const fileName = 'foo.html';
+        const parseOptions = {
+            transformSource: source => source.toUpperCase()
+        };
+
+        parser.parseString('foo', fileName, parseOptions);
+        expect(parseFunctionMock).toHaveBeenCalledWith('FOO', fileName, parseOptions);
+    });
+
     describe('unicode', () => {
 
         function check(text: string): void {

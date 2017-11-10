@@ -66,6 +66,15 @@ export class Validate {
         });
     }
 
+    public functionProperty(object: any, path: string): void {
+        this.entry = this.functionProperty;
+        this.property(object, path, (name, value) => {
+            if (typeof value !== 'function') {
+                throw this.typeError(`Property '${name}' must be a function`);
+            }
+        });
+    }
+
     public object(args: Arguments): void {
         this.entry = this.object;
         this.each(args, (name, value) => {
