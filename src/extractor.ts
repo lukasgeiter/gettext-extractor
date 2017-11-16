@@ -72,8 +72,8 @@ export class GettextExtractor {
 
         let po = new (<any>pofile)();
         po.items = this.getPofileItems();
+        po.headers = Object.assign({'Content-Type': 'text/plain; charset=UTF-8'}, headers);
         po.headers = headers;
-        po.headers['Content-Type'] = po.headers['Content-Type'] || 'text/plain; charset=UTF-8';
         return po.toString();
     }
 
