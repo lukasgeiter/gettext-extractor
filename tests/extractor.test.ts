@@ -26,8 +26,8 @@ describe('GettextExtractor', () => {
             expect(pot).toBe(
                 `msgid ""\n` +
                 `msgstr ""\n` +
-                `"Project-Id-Version: Foo\\n"\n` +
-                `"Content-Type: text/plain; charset=UTF-8\\n"\n`
+                `"Content-Type: text/plain; charset=UTF-8\\n"\n` +
+                `"Project-Id-Version: Foo\\n"\n`
             );
         });
 
