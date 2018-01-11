@@ -140,4 +140,27 @@ describe('HtmlParser', () => {
             check(UnicodeSamples.turkish);
         });
     });
+
+    test('template element', () => {
+        let parser: HtmlParser;
+        let builderMock: CatalogBuilder;
+
+        builderMock = <any>{
+            addMessage: jest.fn()
+        };
+        parser = new HtmlParser(builderMock, [(node: TextNode, fileName: string, addMessage) => {
+            if (node.nodeName === '#text') {
+                addMessage({
+                    text: node.value
+                });
+            }
+        }]);
+
+        parser.parseString(`<template>Foo</template>`, 'foo.html');
+
+        expect(builderMock.addMessage).toHaveBeenCalledWith({
+            text: 'Foo',
+            references: ['foo.html:1']
+        });
+    });
 });
