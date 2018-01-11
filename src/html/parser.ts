@@ -28,8 +28,9 @@ export class HtmlParser extends Parser<IHtmlExtractorFunction, IParseOptions> {
             extractor(node, fileName, addMessageCallback);
         }
 
-        if (node.childNodes) {
-            for (let n of node.childNodes) {
+        let childNodes = node.content ? node.content.childNodes : node.childNodes;
+        if (childNodes) {
+            for (let n of childNodes) {
                 messages = messages.concat(this.parseNode(n, fileName, lineNumberStart));
             }
         }

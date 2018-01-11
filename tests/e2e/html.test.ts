@@ -21,6 +21,24 @@ describe('HTML E2E', () => {
         expect(extractor.getPotString()).toBe(fs.readFileSync(__dirname + '/fixtures/html/example.expected.pot').toString());
     });
 
+    test('template element', () => {
+        let extractor = new GettextExtractor();
+
+        extractor
+            .createHtmlParser([
+                HtmlExtractors.elementContent('[translate]', {
+                    attributes: {
+                        textPlural: 'translate-plural',
+                        context: 'translation-context'
+                    }
+                }),
+                HtmlExtractors.elementAttribute('[translate-alt]', 'alt')
+            ])
+            .parseFile('tests/e2e/fixtures/html/template.html');
+
+        expect(extractor.getPotString()).toBe(fs.readFileSync(__dirname + '/fixtures/html/template.expected.pot').toString());
+    });
+
     test('embedded js', () => {
         let extractor = new GettextExtractor();
 
