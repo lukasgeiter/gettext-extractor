@@ -2,6 +2,7 @@ import * as ts from 'typescript';
 
 import { IJsExtractorFunction } from '../../parser';
 import { Validate } from '../../../utils/validate';
+import { IContentOptions, normalizeContent, validateContentOptions } from '../../../utils/content';
 import { IJsExtractorOptions, validateOptions, IArgumentIndexMapping } from '../common';
 import { JsUtils } from '../../utils';
 import { IAddMessageCallback, IMessageData } from '../../../parser';
@@ -19,6 +20,25 @@ export function callExpressionExtractor(calleeName: string | string[], options: 
     }
 
     validateOptions(options);
+    validateContentOptions(options);
+
+    let contentOptions: IContentOptions = {
+        trimWhiteSpace: false,
+        preserveIndentation: true,
+        replaceNewLines: false
+    };
+
+    if (options.content) {
+        if (options.content.trimWhiteSpace !== undefined) {
+            contentOptions.trimWhiteSpace = options.content.trimWhiteSpace;
+        }
+        if (options.content.preserveIndentation !== undefined) {
+            contentOptions.preserveIndentation = options.content.preserveIndentation;
+        }
+        if (options.content.replaceNewLines !== undefined) {
+            contentOptions.replaceNewLines = options.content.replaceNewLines;
+        }
+    }
 
     return (node: ts.Node, sourceFile: ts.SourceFile, addMessage: IAddMessageCallback) => {
         if (node.kind === ts.SyntaxKind.CallExpression) {
@@ -29,7 +49,7 @@ export function callExpressionExtractor(calleeName: string | string[], options: 
             ), false);
 
             if (matches) {
-                let message = extractArguments(callExpression, options.arguments);
+                let message = extractArguments(callExpression, options.arguments, contentOptions);
                 if (message) {
                     message.comments = JsCommentUtils.extractComments(callExpression, sourceFile, options.comments);
                     addMessage(message);
@@ -39,29 +59,32 @@ export function callExpressionExtractor(calleeName: string | string[], options: 
     };
 }
 
-function extractArguments(callExpression: ts.CallExpression, argumentMapping: IArgumentIndexMapping): IMessageData {
+function extractArguments(callExpression: ts.CallExpression, argumentMapping: IArgumentIndexMapping, contentOptions: IContentOptions): IMessageData {
     let callArguments = callExpression.arguments;
     let textArgument = callArguments[argumentMapping.text],
         textPluralArgument = callArguments[argumentMapping.textPlural],
         contextArgument = callArguments[argumentMapping.context];
 
-    let textValid = textArgument && textArgument.kind === ts.SyntaxKind.StringLiteral,
-        textPluralValid = typeof argumentMapping.textPlural !== 'number' || (textPluralArgument && textPluralArgument.kind === ts.SyntaxKind.StringLiteral);
+    let textPluralValid = typeof argumentMapping.textPlural !== 'number' || isTextLiteral(textPluralArgument);
 
-    if (textValid && textPluralValid) {
+    if (isTextLiteral(textArgument) && textPluralValid) {
         let message: IMessageData = {
-            text: (<ts.StringLiteral>textArgument).text
+            text: normalizeContent(textArgument.text, contentOptions)
         };
 
-        if (textPluralArgument && textPluralArgument.kind === ts.SyntaxKind.StringLiteral) {
-            message.textPlural = (<ts.StringLiteral>textPluralArgument).text;
+        if (isTextLiteral(textPluralArgument)) {
+            message.textPlural = normalizeContent(textPluralArgument.text, contentOptions);
         }
-        if (contextArgument && contextArgument.kind === ts.SyntaxKind.StringLiteral) {
-            message.context = (<ts.StringLiteral>contextArgument).text;
+        if (isTextLiteral(contextArgument)) {
+            message.context = normalizeContent(contextArgument.text, contentOptions);
         }
 
         return message;
     }
 
     return null;
+}
+
+function isTextLiteral(expression: ts.Expression): expression is ts.LiteralExpression {
+    return expression && (expression.kind === ts.SyntaxKind.StringLiteral || expression.kind === ts.SyntaxKind.NoSubstitutionTemplateLiteral);
 }
