@@ -1,5 +1,6 @@
 import { Validate } from '../../utils/validate';
 import { ICommentOptions } from './comments';
+import { IContentOptions, IContentExtractorOptions } from '../../utils/content';
 
 export interface IArgumentIndexMapping {
     text: number;
@@ -7,7 +8,7 @@ export interface IArgumentIndexMapping {
     context?: number;
 }
 
-export interface IJsExtractorOptions {
+export interface IJsExtractorOptions extends IContentExtractorOptions {
     arguments: IArgumentIndexMapping;
     comments?: ICommentOptions;
 }

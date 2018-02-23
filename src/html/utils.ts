@@ -1,12 +1,7 @@
 import * as parse5 from 'parse5';
 
 import { Element } from './parser';
-
-export interface IElementContentOptions {
-    trimWhiteSpace: boolean;
-    preserveIndentation: boolean;
-    replaceNewLines: false | string;
-}
+import { IContentOptions, normalizeContent } from '../utils/content';
 
 export abstract class HtmlUtils {
 
@@ -19,7 +14,7 @@ export abstract class HtmlUtils {
         return null;
     }
 
-    public static getElementContent(element: Element, options: IElementContentOptions): string {
+    public static getElementContent(element: Element, options: IContentOptions): string {
         let content = parse5.serialize(element, {});
 
         // Un-escape characters that get escaped by parse5
@@ -28,16 +23,6 @@ export abstract class HtmlUtils {
             .replace(/&lt;/g, '<')
             .replace(/&gt;/g, '>');
 
-        if (options.trimWhiteSpace) {
-            content = content.replace(/^\n+|\s+$/g, '');
-        }
-        if (!options.preserveIndentation) {
-            content = content.replace(/^[ \t]+/mg, '');
-        }
-        if (typeof options.replaceNewLines === 'string') {
-            content = content.replace(/\n/g, options.replaceNewLines);
-        }
-
-        return content;
+        return normalizeContent(content, options);
     }
 }

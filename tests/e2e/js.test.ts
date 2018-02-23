@@ -12,6 +12,10 @@ describe('JavaScript E2E', () => {
                     arguments: {
                         text: 0,
                         context: 1
+                    },
+                    content: {
+                        trimWhiteSpace: true,
+                        preserveIndentation: false
                     }
                 }),
                 JsExtractors.callExpression('[this].translations.plural', {

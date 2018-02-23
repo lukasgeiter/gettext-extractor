@@ -1,24 +1,18 @@
 import { IHtmlExtractorFunction } from '../../parser';
-import { IElementContentOptions, HtmlUtils } from '../../utils';
+import { HtmlUtils } from '../../utils';
 import { Validate } from '../../../utils/validate';
+import { IContentOptions, IContentExtractorOptions, validateContentOptions } from '../../../utils/content';
 import { IHtmlExtractorOptions, validateOptions } from '../common';
 import { elementExtractor } from './element';
 
-export interface IElementContentExtractorOptions extends IHtmlExtractorOptions {
-    content?: Partial<IElementContentOptions>;
-}
+export interface IElementContentExtractorOptions extends IHtmlExtractorOptions, IContentExtractorOptions {}
 
 export function elementContentExtractor(selector: string, options: IElementContentExtractorOptions = {}): IHtmlExtractorFunction {
     Validate.required.nonEmptyString({selector});
     validateOptions(options);
-    Validate.optional.booleanProperty(options, 'options.content.trimWhiteSpace');
-    Validate.optional.booleanProperty(options, 'options.content.preserveIndentation');
-    if (options.content && options.content.replaceNewLines !== undefined
-        && options.content.replaceNewLines !== false && typeof options.content.replaceNewLines !== 'string') {
-        throw new TypeError(`Property 'options.content.replaceNewLines' must be false or a string`);
-    }
+    validateContentOptions(options);
 
-    let contentOptions: IElementContentOptions = {
+    let contentOptions: IContentOptions = {
         trimWhiteSpace: true,
         preserveIndentation: false,
         replaceNewLines: false

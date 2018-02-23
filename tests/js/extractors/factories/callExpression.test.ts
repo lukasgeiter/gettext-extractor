@@ -97,6 +97,62 @@ describe('JS: Call Expression Extractor', () => {
                     }
                 ]);
             });
+
+            test('template literals', () => {
+                parser.parseString('service.getText(`Foo`);');
+                parser.parseString('service.getText(`Foo`, `Context`);');
+                parser.parseString('service.getText(`Bar ${substitution}`);');
+
+                expect(messages).toEqual([
+                    {
+                        text: 'Foo'
+                    },
+                    {
+                        text: 'Foo',
+                        context: 'Context'
+                    }
+                ]);
+            });
+
+            test('multi-line template literals', () => {
+                parser.parseString(`service.getText(
+                    \`Line one
+                    Line two
+                    Line three\`
+                );`);
+
+                expect(messages).toEqual([
+                    {
+                        text: 'Line one\n                    Line two\n                    Line three'
+                    }
+                ]);
+            });
+
+            test('content options', () => {
+                parser = createParser('service.getText', {
+                    arguments: {
+                        text: 0,
+                        context: 1
+                    },
+                    content: {
+                        trimWhiteSpace: true,
+                        preserveIndentation: false,
+                        replaceNewLines: ' '
+                    }
+                });
+
+                parser.parseString(`service.getText(
+                    \`Line one
+                    Line two
+                    Line three\`
+                );`);
+
+                expect(messages).toEqual([
+                    {
+                        text: 'Line one Line two Line three'
+                    }
+                ]);
+            });
         });
 
         describe('plural', () => {
@@ -175,6 +231,73 @@ describe('JS: Call Expression Extractor', () => {
                         text: 'Foo',
                         textPlural: 'Foos',
                         context: 'Context'
+                    }
+                ]);
+            });
+
+            test('template literals', () => {
+                parser.parseString('service.getPlural(1, `Foo`, `Foos`);');
+                parser.parseString('service.getPlural(1, `Foo`, `Foos`, `Context`);');
+                parser.parseString('service.getPlural(1, `${count} Bar`, `${count} Bars);');
+
+                expect(messages).toEqual([
+                    {
+                        text: 'Foo',
+                        textPlural: 'Foos'
+                    },
+                    {
+                        text: 'Foo',
+                        textPlural: 'Foos',
+                        context: 'Context'
+                    }
+                ]);
+            });
+
+            test('multi-line template literals', () => {
+                parser.parseString(`service.getPlural(1,
+                    \`Line one
+                    Line two
+                    Line three\`,
+                    \`Line ones
+                    Line twos
+                    Line threes\`
+                );`);
+
+                expect(messages).toEqual([
+                    {
+                        text: 'Line one\n                    Line two\n                    Line three',
+                        textPlural: 'Line ones\n                    Line twos\n                    Line threes'
+                    }
+                ]);
+            });
+
+            test('content options', () => {
+                parser = createParser('service.getPlural', {
+                    arguments: {
+                        text: 1,
+                        textPlural: 2,
+                        context: 3
+                    },
+                    content: {
+                        trimWhiteSpace: true,
+                        preserveIndentation: false,
+                        replaceNewLines: ' '
+                    }
+                });
+
+                parser.parseString(`service.getPlural(1,
+                    \`Line one
+                    Line two
+                    Line three\`,
+                    \`Line ones
+                    Line twos
+                    Line threes\`
+                );`);
+
+                expect(messages).toEqual([
+                    {
+                        text: 'Line one Line two Line three',
+                        textPlural: 'Line ones Line twos Line threes'
                     }
                 ]);
             });
@@ -523,6 +646,69 @@ describe('JS: Call Expression Extractor', () => {
                     }
                 });
             }).toThrowError(`Property 'options.comments.sameLineTrailing' must be a boolean`);
+        });
+
+        test('options.content: wrong type', () => {
+            expect(() => {
+                (<any>callExpressionExtractor)('service.getText', {
+                    arguments: {
+                        text: 1
+                    },
+                    content: 'foo'
+                });
+            }).toThrowError(`Property 'options.content' must be an object`);
+        });
+
+        test('options.content.trimWhiteSpace: wrong type', () => {
+            expect(() => {
+                (<any>callExpressionExtractor)('service.getText', {
+                    arguments: {
+                        text: 1
+                    },
+                    content: {
+                        trimWhiteSpace: 'foo'
+                    }
+                });
+            }).toThrowError(`Property 'options.content.trimWhiteSpace' must be a boolean`);
+        });
+
+        test('options.content.preserveIndentation: wrong type', () => {
+            expect(() => {
+                (<any>callExpressionExtractor)('service.getText', {
+                    arguments: {
+                        text: 1
+                    },
+                    content: {
+                        preserveIndentation: 'foo'
+                    }
+                });
+            }).toThrowError(`Property 'options.content.preserveIndentation' must be a boolean`);
+        });
+
+        test('options.content.replaceNewLines: wrong type', () => {
+            expect(() => {
+                (<any>callExpressionExtractor)('service.getText', {
+                    arguments: {
+                        text: 1
+                    },
+                    content: {
+                        replaceNewLines: 42
+                    }
+                });
+            }).toThrowError(`Property 'options.content.replaceNewLines' must be false or a string`);
+        });
+
+        test('options.content.replaceNewLines: true', () => {
+            expect(() => {
+                (<any>callExpressionExtractor)('service.getText', {
+                    arguments: {
+                        text: 1
+                    },
+                    content: {
+                        replaceNewLines: true
+                    }
+                });
+            }).toThrowError(`Property 'options.content.replaceNewLines' must be false or a string`);
         });
     });
 });
