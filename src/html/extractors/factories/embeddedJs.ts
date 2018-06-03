@@ -24,7 +24,7 @@ export function embeddedJsExtractor(selector: string, jsParser: JsParser): IHtml
                 replaceNewLines: false
             });
             jsParser.parseString(source, fileName, {
-                lineNumberStart: element.__location && element.__location.line
+                lineNumberStart: element.sourceCodeLocation && element.sourceCodeLocation.startLine
             });
         }
     };
