@@ -1807,8 +1807,8 @@ pkg-dir@^2.0.0:
     find-up "^2.1.0"
 
 pofile@^1:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/pofile/-/pofile-1.0.8.tgz#09246a1788035404fc4d1ee087fa5e9ea686567d"
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/pofile/-/pofile-1.0.11.tgz#35aff58c17491d127a07336d5522ebc9df57c954"
 
 prelude-ls@~1.1.2:
   version "1.1.2"
