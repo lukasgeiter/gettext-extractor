@@ -39,12 +39,12 @@
         "typescript": "^2"
     },
     "devDependencies": {
-        "@types/glob": "^5.0.30",
-        "@types/jest": "^20.0.2",
-        "@types/node": "^8.0.13",
+        "@types/glob": "^5.0.35",
+        "@types/jest": "^23.0.2",
+        "@types/node": "^10.3.2",
         "@types/parse5": "^5.0.0",
-        "jest": "^20.0.4",
-        "ts-jest": "^20.0.7",
-        "tslint": "^5.5.0"
+        "jest": "^23.1.0",
+        "ts-jest": "^22.4.6",
+        "tslint": "^5.10.0"
     }
 }

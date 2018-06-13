@@ -121,7 +121,7 @@ export abstract class JsCommentUtils {
         return { start, end };
     }
 
-    private static nodeIsOnSeparateLine(node: ts.Node, nodes: ts.Node[], sourceFile: ts.SourceFile): boolean {
+    private static nodeIsOnSeparateLine(node: ts.Node, nodes: ReadonlyArray<ts.Node>, sourceFile: ts.SourceFile): boolean {
         let index = nodes.indexOf(node);
         if (index === -1) {
             return false;
