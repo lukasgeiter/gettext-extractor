@@ -65,6 +65,9 @@ function extractArguments(callExpression: ts.CallExpression, argumentMapping: IA
         textPluralArgument = callArguments[argumentMapping.textPlural],
         contextArgument = callArguments[argumentMapping.context];
 
+    textArgument = checkAndConcatenateStrings(textArgument);
+    textPluralArgument = checkAndConcatenateStrings(textPluralArgument);
+
     let textPluralValid = typeof argumentMapping.textPlural !== 'number' || isTextLiteral(textPluralArgument);
 
     if (isTextLiteral(textArgument) && textPluralValid) {
@@ -87,4 +90,63 @@ function extractArguments(callExpression: ts.CallExpression, argumentMapping: IA
 
 function isTextLiteral(expression: ts.Expression): expression is ts.LiteralExpression {
     return expression && (expression.kind === ts.SyntaxKind.StringLiteral || expression.kind === ts.SyntaxKind.NoSubstitutionTemplateLiteral);
+}
+
+function isParenthesizedExpression(expression: ts.Expression): expression is ts.ParenthesizedExpression {
+    return expression && expression.kind === ts.SyntaxKind.ParenthesizedExpression;
+}
+
+function isBinaryExpression(expression: ts.Expression): expression is ts.BinaryExpression {
+    return expression && expression.kind === ts.SyntaxKind.BinaryExpression;
+}
+
+function getAdditionExpression(expression: ts.Expression): ts.BinaryExpression | null {
+    while (isParenthesizedExpression(expression)) {
+        expression = expression.expression;
+    }
+
+    if (isBinaryExpression(expression) && expression.operatorToken.kind === ts.SyntaxKind.PlusToken) {
+        return expression;
+    }
+
+    return null;
+}
+
+function checkAndConcatenateStrings(expression: ts.Expression): ts.Expression {
+    let addition: ts.BinaryExpression;
+
+    if (!expression || !(addition = getAdditionExpression(expression))) {
+        return expression;
+    }
+
+    let concatenated = ts.createStringLiteral('');
+
+    if (processStringAddition(addition, concatenated)) {
+        return concatenated;
+    }
+
+    return expression;
+}
+
+function processStringAddition(expression: ts.BinaryExpression, concatenated: ts.StringLiteral): boolean {
+    let addition: ts.BinaryExpression;
+
+    if (isTextLiteral(expression.left)) {
+        concatenated.text += expression.left.text;
+    } else if (addition = getAdditionExpression(expression.left)) {
+        if (!processStringAddition(addition, concatenated)) {
+            return false;
+        }
+    } else {
+        return false;
+    }
+
+    if (isTextLiteral(expression.right)) {
+        concatenated.text += expression.right.text;
+        return true;
+    } else if (addition = getAdditionExpression(expression.right)) {
+        return processStringAddition(addition, concatenated);
+    } else {
+        return false;
+    }
 }
