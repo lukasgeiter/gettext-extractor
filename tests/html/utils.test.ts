@@ -1,6 +1,7 @@
 import * as parse5 from 'parse5';
-import { HtmlUtils, IElementContentOptions } from '../../src/html/utils';
+import { HtmlUtils } from '../../src/html/utils';
 import { Element } from '../../src/html/parser';
+import { IContentOptions } from '../../src/utils/content';
 
 describe('HTML: Utils', () => {
 
@@ -52,7 +53,7 @@ describe('HTML: Utils', () => {
         const MULTIPLE_CHILD_ELEMENTS_INDENTED_SPACES = `<div>${newLine}    <div>${newLine}        <p>Foo</p>${newLine}        <p>Bar</p>${newLine}    </div>${newLine}</div>`;
         const MULTIPLE_CHILD_ELEMENTS_INDENTED_TABS = `<div>${newLine}\t<div>${newLine}\t\t<p>Foo</p>${newLine}\t\t<p>Bar</p>${newLine}\t</div>${newLine}</div>`;
 
-        let options: IElementContentOptions;
+        let options: IContentOptions;
 
         function getContent(source: string): string {
             return HtmlUtils.getElementContent(createElement(source), options);
