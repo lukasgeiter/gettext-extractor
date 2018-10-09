@@ -128,6 +128,23 @@ describe('JS: Call Expression Extractor', () => {
                 ]);
             });
 
+            test('concatenated srings', () => {
+                parser.parseString('service.getText("Foo " + \'bar \' + `template literal`);');
+                parser.parseString(`service.getText('Foo' + variable);`);
+                parser.parseString('service.getText(\`template \` + "string1 " + "string2"');
+                parser.parseString(`service.getText('string' + 10);`);
+                parser.parseString('service.getText(`Bar ${substitution}`);');
+
+                expect(messages).toEqual([
+                    {
+                        text: 'Foo bar template literal'
+                    },
+                    {
+                        text: 'template string1 string2'
+                    }
+                ]);
+            });
+
             test('content options', () => {
                 parser = createParser('service.getText', {
                     arguments: {
@@ -269,6 +286,30 @@ describe('JS: Call Expression Extractor', () => {
                         textPlural: 'Line ones\n                    Line twos\n                    Line threes'
                     }
                 ]);
+            });
+
+            test('concatenated strings', () => {
+                parser.parseString(`service.getPlural(1, 'Foo', 'Foo' + 's');`);
+                parser.parseString(`service.getPlural(1, 'Foo', 'Foo' + \`s\`);`);
+                parser.parseString(`service.getPlural(2, 'Foo', "F" + 'o' + 'o' + \`s\`);`);
+                parser.parseString(`service.getPlural(3, 'Foo' + 1 + 'bar');`);
+                parser.parseString('service.getPlural(\'Foo\', \'Bar\' + \`${counter}\`);');
+
+                expect(messages).toEqual([
+                    {
+                        text: 'Foo',
+                        textPlural: 'Foos'
+                    },
+                    {
+                        text: 'Foo',
+                        textPlural: 'Foos'
+                    },
+                    {
+                        text: 'Foo',
+                        textPlural: 'Foos'
+                    }
+                ]);
+
             });
 
             test('content options', () => {
