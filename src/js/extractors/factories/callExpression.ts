@@ -100,6 +100,12 @@ function isBinaryExpression(expression: ts.Expression): expression is ts.BinaryE
     return expression && expression.kind === ts.SyntaxKind.BinaryExpression;
 }
 
+function createStringLiteral(text: string): ts.StringLiteral {
+    const node = <ts.StringLiteral>ts.createNode(ts.SyntaxKind.StringLiteral, -1, -1);
+    node.text = text;
+    return node;
+}
+
 function getAdditionExpression(expression: ts.Expression): ts.BinaryExpression | null {
     while (isParenthesizedExpression(expression)) {
         expression = expression.expression;
@@ -119,7 +125,7 @@ function checkAndConcatenateStrings(expression: ts.Expression): ts.Expression {
         return expression;
     }
 
-    let concatenated = ts.createStringLiteral('');
+    let concatenated = createStringLiteral('');
 
     if (processStringAddition(addition, concatenated)) {
         return concatenated;
