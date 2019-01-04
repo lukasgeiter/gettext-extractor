@@ -20,6 +20,7 @@ export function validateContentOptions(options: IContentExtractorOptions): void 
 }
 
 export function normalizeContent(content: string, options: IContentOptions): string {
+    content = content.replace(/\r\n/g, '\n');
     if (options.trimWhiteSpace) {
         content = content.replace(/^\n+|\s+$/g, '');
     }
