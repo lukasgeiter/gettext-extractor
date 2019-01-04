@@ -115,6 +115,27 @@ describe('Content Utils', () => {
                 }
             );
 
+            testCase('indented leading newline',
+                '    \n' +
+                '    Foo Bar\n',
+                {
+                    default:
+                        'Foo Bar',
+                    noTrim:
+                        '\n' +
+                        'Foo Bar\n',
+                    preserveIndentation:
+                        '    Foo Bar',
+                    noTrimPreserveIndentation:
+                        '    \n' +
+                        '    Foo Bar\n',
+                    replaceNewlinesCRLF:
+                        'Foo Bar',
+                    replaceNewlinesCRLFPreserveIndentation:
+                        '    Foo Bar'
+                }
+            );
+
             testCase('multiple leading newlines',
                 '\n' +
                 '\n' +

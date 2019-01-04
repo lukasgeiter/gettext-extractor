@@ -22,7 +22,22 @@ export function validateContentOptions(options: IContentExtractorOptions): void 
 export function normalizeContent(content: string, options: IContentOptions): string {
     content = content.replace(/\r\n/g, '\n');
     if (options.trimWhiteSpace) {
-        content = content.replace(/^\n+|\s+$/g, '');
+        if (options.preserveIndentation) {
+            // trim whitespace while preserving indentation
+            // uses regex constructor instead of literal to simplify documentation
+            let contentWithIndentationRegex = new RegExp(
+                '^\\s*?' + // non-greedily matches whitespace in the beginning
+                '(' +
+                    '[ \\t]*\\S' + // matches tabs or spaces in front of a non-whitespace character
+                    '[^]*?' + // non-greedily matches everything (including newlines) until the end (minus trailing whitespace)
+                ')' +
+                '\\s*$', // matches trailing whitespace
+                'g'
+            );
+            content = content.replace(contentWithIndentationRegex, '$1');
+        } else {
+            content = content.trim();
+        }
     }
     if (!options.preserveIndentation) {
         content = content.replace(/^[ \t]+/mg, '');
