@@ -168,6 +168,22 @@ describe('JS: comments', () => {
                     line comment */
                 `, {});
             });
+
+            test('empty comment', () => {
+                check(
+                    `
+                    /**/
+                    getText('Foo');
+                `, {});
+            });
+
+            test('whitespace comment', () => {
+                check(
+                    `
+                    /*  */
+                    getText('Foo');
+                `, {});
+            });
         });
 
         describe('jsx', () => {
