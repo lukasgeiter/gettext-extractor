@@ -175,7 +175,7 @@ export abstract class JsCommentUtils {
                 comment = match ? (match[1] || match[0]) : null;
             }
 
-            if (comment) {
+            if (comment || comment === '') {
                 comments.push(comment);
             }
         }

@@ -84,6 +84,17 @@ describe('JS: comments', () => {
                 });
             });
 
+            test('empty comment in between the leading lines', () => {
+                check(`
+                    // The first leading line comment
+                    //
+                    // The last leading line comment
+                    getText('Foo');
+                `, {
+                    otherLineLeading: ['The first leading line comment', '', 'The last leading line comment']
+                });
+            });
+
             test('leading line with space', () => {
                 check(`
                     // Leading line comment with space
