@@ -170,13 +170,15 @@ export abstract class JsCommentUtils {
                 }
             }
 
-            if (comment && commentOptions.regex) {
-                let match = comment.match(commentOptions.regex);
-                comment = match ? (match[1] || match[0]) : null;
-            }
-
             if (comment) {
-                comments.push(comment);
+                if (commentOptions.regex) {
+                    let match = comment.match(commentOptions.regex);
+                    if (match) {
+                        comments.push(match[1] !== undefined ? match[1] : match[0]);
+                    }
+                } else {
+                    comments.push(comment);
+                }
             }
         }
 

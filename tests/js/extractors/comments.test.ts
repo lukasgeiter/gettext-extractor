@@ -999,6 +999,33 @@ describe('JS: comments', () => {
             ]);
         });
 
+        test('with capturing group empty string match', () => {
+            parser = new JsParser(builder, [
+                callExpressionExtractor('getText', {
+                    arguments: {
+                        text: 0,
+                        context: 1
+                    },
+                    comments: {
+                        regex: /^Marker:\s*(.*)$/,
+                        otherLineLeading: true,
+                        sameLineTrailing: true
+                    }
+                })
+            ]);
+
+            expect(getComments(`
+                // Marker: Foo
+                // Marker:
+                // Marker: Bar
+                getText('Foo');
+            `)).toEqual([
+                'Foo',
+                '',
+                'Bar'
+            ]);
+        });
+
         test('without capturing group', () => {
             parser = new JsParser(builder, [
                 callExpressionExtractor('getText', {
