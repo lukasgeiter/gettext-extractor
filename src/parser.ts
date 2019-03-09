@@ -25,9 +25,9 @@ export abstract class Parser<TExtractorFunction extends Function, TParseOptions 
 
     public static STRING_LITERAL_FILENAME: string = 'gettext-extractor-string-literal';
 
-    public static createAddMessageCallback(messages: IMessage[], fileName: string, getLineNumber: () => number): IAddMessageCallback {
+    public static createAddMessageCallback(messages: Partial<IMessage>[], fileName: string, getLineNumber: () => number | undefined): IAddMessageCallback {
         return (data: IMessageData) => {
-            let references: string[];
+            let references: string[] | undefined;
 
             if (typeof data.lineNumber !== 'number') {
                 data.lineNumber = getLineNumber();
@@ -39,7 +39,7 @@ export abstract class Parser<TExtractorFunction extends Function, TParseOptions 
                 references = [`${data.fileName}:${data.lineNumber}`];
             }
 
-            let message: IMessage = {
+            let message: Partial<IMessage> = {
                 text: data.text,
                 textPlural: data.textPlural || undefined,
                 context: data.context || undefined,
@@ -116,7 +116,7 @@ export abstract class Parser<TExtractorFunction extends Function, TParseOptions 
         return this;
     }
 
-    protected validateParseOptions(options: TParseOptions): void {
+    protected validateParseOptions(options?: TParseOptions): void {
         Validate.optional.numberProperty(options, 'options.lineNumberStart');
         Validate.optional.functionProperty(options, 'options.transformSource');
     }

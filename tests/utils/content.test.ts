@@ -48,8 +48,8 @@ describe('Content Utils', () => {
                 describe(summary, () => {
                     for (let scenario of Object.keys(scenarios)) {
                         test(scenario, () => {
-                            expect(normalizeContent(source, scenarios[scenario]))
-                                .toBe(expectedResults[scenario].replace(whitespacePlaceholder, whitespace));
+                            expect(normalizeContent(source, (scenarios as any)[scenario]))
+                                .toBe((expectedResults as any)[scenario].replace(whitespacePlaceholder, whitespace));
                         });
                     }
                 });

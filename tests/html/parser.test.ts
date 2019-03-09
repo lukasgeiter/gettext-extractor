@@ -1,7 +1,8 @@
-import { HtmlParser, TextNode } from '../../src/html/parser';
+import { HtmlParser, TextNode, Node } from '../../src/html/parser';
 import { registerCommonParserTests } from '../parser.common';
 import { UnicodeSamples } from '../fixtures/unicode';
 import { CatalogBuilder } from '../../src/builder';
+import { IParseOptions } from '../../src/parser';
 
 describe('HtmlParser', () => {
 
@@ -16,10 +17,10 @@ describe('HtmlParser', () => {
             builderMock = <any>{
                 addMessage: jest.fn()
             };
-            parser = new HtmlParser(builderMock, [(node: TextNode, fileName: string, addMessage) => {
+            parser = new HtmlParser(builderMock, [(node: Node, fileName: string, addMessage) => {
                 if (node.nodeName === '#text') {
                     addMessage({
-                        text: node.value
+                        text: (node as TextNode).value
                     });
                 }
             }]);
@@ -60,7 +61,7 @@ describe('HtmlParser', () => {
         let parseFunctionMock = (<any>parser).parse = jest.fn(() => []);
 
         const fileName = 'foo.html';
-        const parseOptions = {
+        const parseOptions: IParseOptions = {
             transformSource: source => source.toUpperCase()
         };
 
@@ -71,9 +72,9 @@ describe('HtmlParser', () => {
     describe('unicode', () => {
 
         function check(text: string): void {
-            let parser = new HtmlParser(new CatalogBuilder(), [(node: TextNode) => {
+            let parser = new HtmlParser(new CatalogBuilder(), [(node: Node) => {
                 if (node.nodeName === '#text') {
-                    expect(node.value).toEqual(text);
+                    expect((node as TextNode).value).toEqual(text);
                 }
             }]);
 
@@ -148,10 +149,10 @@ describe('HtmlParser', () => {
         builderMock = <any>{
             addMessage: jest.fn()
         };
-        parser = new HtmlParser(builderMock, [(node: TextNode, fileName: string, addMessage) => {
+        parser = new HtmlParser(builderMock, [(node: Node, fileName: string, addMessage) => {
             if (node.nodeName === '#text') {
                 addMessage({
-                    text: node.value
+                    text: (node as TextNode).value
                 });
             }
         }]);

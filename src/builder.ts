@@ -1,11 +1,11 @@
 import { IGettextExtractorStats } from './extractor';
 
 export interface IMessage {
-    text: string;
-    textPlural?: string;
-    context?: string;
-    references?: string[];
-    comments?: string[];
+    text: string | null;
+    textPlural?: string | null;
+    context?: string | null;
+    references: string[];
+    comments: string[];
 }
 
 export interface IContext {
@@ -24,7 +24,7 @@ export class CatalogBuilder {
         return a.localeCompare(b);
     }
 
-    private static concatUnique(array: any[], items: any[]): any[] {
+    private static concatUnique(array?: any[], items?: any[]): any[] {
         array = array || [];
         for (let item of items || []) {
             if (array.indexOf(item) === -1) {
@@ -34,7 +34,7 @@ export class CatalogBuilder {
         return array;
     }
 
-    private static extendMessage(message: IMessage, data: IMessage): IMessage {
+    private static extendMessage(message: IMessage, data: Partial<IMessage>): IMessage {
 
         message.text = typeof data.text === 'string' ? data.text : message.text;
         message.textPlural = typeof data.textPlural === 'string' ? data.textPlural : message.textPlural;
@@ -45,7 +45,7 @@ export class CatalogBuilder {
         return message;
     }
 
-    private static normalizeMessage(message: IMessage): IMessage {
+    private static normalizeMessage(message: Partial<IMessage>): IMessage {
         return CatalogBuilder.extendMessage({
             text: null,
             textPlural: null,
@@ -59,21 +59,21 @@ export class CatalogBuilder {
         private stats?: IGettextExtractorStats
     ) {}
 
-    public addMessage(message: IMessage): void {
+    public addMessage(message: Partial<IMessage>): void {
         message = CatalogBuilder.normalizeMessage(message);
         let context = this.getOrCreateContext(message.context || '');
-        if (context[message.text]) {
-            if (message.textPlural && context[message.text].textPlural && context[message.text].textPlural !== message.textPlural) {
-                throw new Error(`Incompatible plurals found for '${message.text}' ('${context[message.text].textPlural}' and '${message.textPlural}')`);
+        if (context[message.text!]) {
+            if (message.textPlural && context[message.text!].textPlural && context[message.text!].textPlural !== message.textPlural) {
+                throw new Error(`Incompatible plurals found for '${message.text}' ('${context[message.text!].textPlural}' and '${message.textPlural}')`);
             }
 
-            if (message.textPlural && !context[message.text].textPlural) {
+            if (message.textPlural && !context[message.text!].textPlural) {
                 this.stats && this.stats.numberOfPluralMessages++;
             }
 
-            CatalogBuilder.extendMessage(context[message.text], message);
+            CatalogBuilder.extendMessage(context[message.text!], message);
         } else {
-            context[message.text] = message;
+            context[message.text!] = message as IMessage;
 
             this.stats && this.stats.numberOfMessages++;
             if (message.textPlural) {

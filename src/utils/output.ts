@@ -1,6 +1,7 @@
 import { IGettextExtractorStats } from '../extractor';
+import { Chalk } from 'chalk';
 
-let chalk;
+let chalk: Chalk | undefined;
 try {
     chalk = require('chalk');
 } catch (e) { /* falls back to default colored output */ }
@@ -18,7 +19,7 @@ export abstract class OutputUtils {
 interface IStatsDetail {
     primaryNumber: number;
     primaryText: string;
-    secondaryText?: string;
+    secondaryText?: string | false;
 }
 
 export class StatsOutput {

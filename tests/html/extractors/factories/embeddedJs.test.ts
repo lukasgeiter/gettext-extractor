@@ -14,7 +14,7 @@ describe('HTML: Embedded JS Extractor', () => {
                 parseString: jest.fn()
             };
 
-            htmlParser = new HtmlParser(undefined, [
+            htmlParser = new HtmlParser(undefined!, [
                 embeddedJsExtractor('script', jsParserMock)
             ]);
         });

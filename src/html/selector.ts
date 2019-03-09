@@ -74,7 +74,7 @@ export class ElementSelectorSet {
             }
 
             if (rule.attrs) {
-                selector.attributes = rule.attrs.map(a => {
+                selector.attributes = rule.attrs.map((a: any) => {
                     return {
                         name: a.name,
                         operator: a.operator,
@@ -98,10 +98,10 @@ export class ElementSelectorSet {
 
 export class ElementSelector implements IElementSelector {
 
-    public tagName: string;
-    public id: string;
-    public classNames: string[];
-    public attributes: IElementSelectorAttribute[];
+    public tagName?: string;
+    public id?: string;
+    public classNames?: string[];
+    public attributes?: IElementSelectorAttribute[];
 
     constructor(
         private selector: IElementSelector

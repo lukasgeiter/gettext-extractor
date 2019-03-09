@@ -112,9 +112,9 @@ export class GettextExtractor {
         return this.getMessages().map(message => {
             let item = new pofile.Item();
 
-            item.msgid = message.text;
-            item.msgid_plural = message.textPlural;
-            item.msgctxt = message.context;
+            item.msgid = message.text as string;
+            item.msgid_plural = message.textPlural as string;
+            item.msgctxt = message.context as string;
             item.references = message.references.sort((a, b) => a.localeCompare(b));
             item.extractedComments = message.comments;
 

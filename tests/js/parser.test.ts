@@ -1,6 +1,6 @@
 import * as ts from 'typescript';
 
-import { JsParser } from '../../src/js/parser';
+import { JsParser, IJsParseOptions } from '../../src/js/parser';
 import { registerCommonParserTests } from '../parser.common';
 import { UnicodeSamples } from '../fixtures/unicode';
 import { CatalogBuilder } from '../../src/builder';
@@ -62,7 +62,7 @@ describe('JsParser', () => {
         let parseFunctionMock = (<any>parser).parse = jest.fn(() => []);
 
         const fileName = 'foo.ts';
-        const parseOptions = {
+        const parseOptions: IJsParseOptions = {
             transformSource: source => source.toUpperCase()
         };
 
@@ -73,9 +73,9 @@ describe('JsParser', () => {
     describe('unicode', () => {
 
         function check(text: string): void {
-            let parser = new JsParser(new CatalogBuilder(), [(node: ts.StringLiteral) => {
+            let parser = new JsParser(new CatalogBuilder(), [(node: ts.Node) => {
                 if (node.kind === ts.SyntaxKind.StringLiteral) {
-                    expect(node.text).toEqual(text);
+                    expect((node as ts.StringLiteral).text).toEqual(text);
                 }
             }]);
 

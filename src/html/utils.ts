@@ -5,7 +5,7 @@ import { IContentOptions, normalizeContent } from '../utils/content';
 
 export abstract class HtmlUtils {
 
-    public static getAttributeValue(element: Element, attributeName: string): string {
+    public static getAttributeValue(element: Element, attributeName: string): string | null {
         for (let attribute of element.attrs) {
             if (attribute.name === attributeName) {
                 return attribute.value;

@@ -547,25 +547,25 @@ describe('Element Selector', () => {
                     selector1.matches.mockReturnValueOnce(false);
                     selector2.matches.mockReturnValueOnce(false);
 
-                    expect(set.anyMatch(null)).toBe(false);
+                    expect(set.anyMatch(null!)).toBe(false);
                 });
 
                 test('one matches', () => {
                     selector1.matches.mockReturnValueOnce(false);
                     selector2.matches.mockReturnValueOnce(true);
 
-                    expect(set.anyMatch(null)).toBe(true);
+                    expect(set.anyMatch(null!)).toBe(true);
                 });
 
                 test('all match', () => {
                     selector1.matches.mockReturnValueOnce(true);
                     selector2.matches.mockReturnValueOnce(true);
 
-                    expect(set.anyMatch(null)).toBe(true);
+                    expect(set.anyMatch(null!)).toBe(true);
                 });
 
                 test('no selectors', () => {
-                    expect(new ElementSelectorSet([]).anyMatch(null)).toBe(false);
+                    expect(new ElementSelectorSet([]).anyMatch(null!)).toBe(false);
                 });
             });
 
@@ -575,25 +575,25 @@ describe('Element Selector', () => {
                     selector1.matches.mockReturnValueOnce(false);
                     selector2.matches.mockReturnValueOnce(false);
 
-                    expect(set.allMatch(null)).toBe(false);
+                    expect(set.allMatch(null!)).toBe(false);
                 });
 
                 test('one matches', () => {
                     selector1.matches.mockReturnValueOnce(false);
                     selector2.matches.mockReturnValueOnce(true);
 
-                    expect(set.allMatch(null)).toBe(false);
+                    expect(set.allMatch(null!)).toBe(false);
                 });
 
                 test('all match', () => {
                     selector1.matches.mockReturnValueOnce(true);
                     selector2.matches.mockReturnValueOnce(true);
 
-                    expect(set.allMatch(null)).toBe(true);
+                    expect(set.allMatch(null!)).toBe(true);
                 });
 
                 test('no selectors', () => {
-                    expect(new ElementSelectorSet([]).allMatch(null)).toBe(false);
+                    expect(new ElementSelectorSet([]).allMatch(null!)).toBe(false);
                 });
             });
         });

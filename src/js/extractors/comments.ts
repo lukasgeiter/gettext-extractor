@@ -80,7 +80,7 @@ export abstract class JsCommentUtils {
                     if (variableDeclarationList.declarations.length === 1) {
                         return this.getExtractionPositions(variableDeclarationList.parent, sourceFile);
                     } else {
-                        if (this.nodeIsOnSeparateLine(node, variableDeclarationList.declarations.map(d => d.initializer), sourceFile)) {
+                        if (this.nodeIsOnSeparateLine(node, variableDeclarationList.declarations.map(d => d.initializer) as ReadonlyArray<ts.Node>, sourceFile)) {
                             if (variableDeclarationList.declarations[variableDeclarationList.declarations.length - 1].initializer === node) {
                                 skipToSemicolon();
                             } else {
@@ -93,7 +93,7 @@ export abstract class JsCommentUtils {
 
             case ts.SyntaxKind.CallExpression:
             case ts.SyntaxKind.NewExpression:
-                if (this.nodeIsOnSeparateLine(node, (<ts.CallExpression|ts.NewExpression>node.parent).arguments, sourceFile)) {
+                if (this.nodeIsOnSeparateLine(node, (<ts.CallExpression|ts.NewExpression>node.parent).arguments as ReadonlyArray<ts.Node>, sourceFile)) {
                     skipToComma();
                 }
                 break;
@@ -142,7 +142,7 @@ export abstract class JsCommentUtils {
     }
 
     private static extractCommentsAtPosition(source: string, position: number, edge: CommentEdge, commentOptions: ICommentOptions): string[] {
-        let ranges: ts.CommentRange[],
+        let ranges: ts.CommentRange[] | undefined,
             comments: string[] = [];
 
         if (edge === CommentEdge.Leading) {
@@ -153,7 +153,7 @@ export abstract class JsCommentUtils {
 
         for (let range of ranges || []) {
             let commentSource = source.slice(range.pos, range.end),
-                comment: string,
+                comment: string | null | undefined,
                 isSameLine = !range.hasTrailingNewLine;
 
             if (
@@ -197,12 +197,12 @@ export abstract class JsCommentUtils {
         return options;
     }
 
-    private static extractLineComment(source: string): string {
+    private static extractLineComment(source: string): string | null {
         let match = source.match(/^\/\/\s*(.*?)\s*$/);
         return match ? match[1] : null;
     }
 
-    private static extractBlockComment(source: string): string {
+    private static extractBlockComment(source: string): string | null {
         if (source.indexOf('\n') !== -1) {
             return null;
         }

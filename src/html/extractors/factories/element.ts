@@ -5,7 +5,7 @@ import { Element, Node } from '../../parser';
 import { HtmlUtils } from '../../utils';
 import { IHtmlExtractorOptions } from '../common';
 
-export type ITextExtractor = (element: Element) => string;
+export type ITextExtractor = (element: Element) => string | null;
 
 export function elementExtractor(selector: string | IElementSelector[], textExtractor: ITextExtractor, options: IHtmlExtractorOptions = {}): IHtmlExtractorFunction {
 
@@ -19,8 +19,8 @@ export function elementExtractor(selector: string | IElementSelector[], textExtr
         let element = <Element>node;
 
         if (selectors.anyMatch(element)) {
-            let context: string,
-                textPlural: string;
+            let context: string | undefined,
+                textPlural: string | undefined;
 
             if (options.attributes && options.attributes.context) {
                 context = HtmlUtils.getAttributeValue(element, options.attributes.context) || undefined;

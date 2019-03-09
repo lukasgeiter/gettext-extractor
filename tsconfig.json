@@ -4,10 +4,12 @@
         "target": "ES6",
         "module": "commonjs",
         "declaration": true,
-        "newLine": "LF"
+        "newLine": "LF",
+        "strict": true
     },
     "files": [
-        "src/index.ts"
+        "src/index.ts",
+        "modules.d.ts"
     ],
     "exclude": [
         "node_modules"

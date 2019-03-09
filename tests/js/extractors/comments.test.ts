@@ -24,7 +24,7 @@ describe('JS: comments', () => {
 
     function getComments(source: string, options?: IJsParseOptions): string[] {
         parser.parseString(source, undefined, options);
-        return messages.pop().comments;
+        return messages.pop()!.comments;
     }
 
     function registerTests(commentOptions: ICommentOptions): void {
@@ -34,9 +34,9 @@ describe('JS: comments', () => {
             let totalCount = 0;
 
             for (let extractionType of Object.keys(commentOptions)) {
-                if (commentOptions[extractionType] && expectedComments[extractionType]) {
+                if ((commentOptions as any)[extractionType] && (expectedComments as any)[extractionType]) {
                     // console.log('checking', extractionType);
-                    for (let comment of expectedComments[extractionType]) {
+                    for (let comment of (expectedComments as any)[extractionType]) {
                         expect(extractedComments).toContain(comment);
                         totalCount++;
                     }

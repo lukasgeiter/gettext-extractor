@@ -2,7 +2,7 @@ export type Arguments = {[name: string]: any};
 
 export class Validate {
 
-    private entry: Function;
+    private entry?: Function;
 
     public static get required(): Validate {
         return new Validate(true);
@@ -126,7 +126,7 @@ export class Validate {
         let properties = path.split('.');
 
         let value = object;
-        let name = properties.shift();
+        let name = properties.shift()!;
 
         if (!value && !this.required) {
             return;
@@ -134,7 +134,7 @@ export class Validate {
 
         this.object({[name]: value});
 
-        let property: string;
+        let property: string | undefined;
         while (property = properties.shift()) {
             name += `.${property}`;
             value = value[property];

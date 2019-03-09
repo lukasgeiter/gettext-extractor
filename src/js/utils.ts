@@ -9,7 +9,7 @@ export abstract class JsUtils {
             return false;
         }
 
-        let segment: string;
+        let segment: string | undefined;
 
         switch (propertyAccessExpression.expression.kind) {
             case ts.SyntaxKind.Identifier:

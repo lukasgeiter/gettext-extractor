@@ -11,7 +11,7 @@ import { JsCommentUtils } from '../comments';
 export function callExpressionExtractor(calleeName: string | string[], options: IJsExtractorOptions): IJsExtractorFunction {
     Validate.required.argument({calleeName});
 
-    let calleeNames = [].concat(calleeName);
+    let calleeNames = ([] as string[]).concat(calleeName);
 
     for (let name of calleeNames) {
         if (typeof name !== 'string' || name.length === 0) {
@@ -59,11 +59,11 @@ export function callExpressionExtractor(calleeName: string | string[], options: 
     };
 }
 
-function extractArguments(callExpression: ts.CallExpression, argumentMapping: IArgumentIndexMapping, contentOptions: IContentOptions): IMessageData {
+function extractArguments(callExpression: ts.CallExpression, argumentMapping: IArgumentIndexMapping, contentOptions: IContentOptions): IMessageData | null {
     let callArguments = callExpression.arguments;
-    let textArgument = callArguments[argumentMapping.text],
-        textPluralArgument = callArguments[argumentMapping.textPlural],
-        contextArgument = callArguments[argumentMapping.context];
+    let textArgument: ts.Expression | undefined = callArguments[argumentMapping.text],
+        textPluralArgument: ts.Expression | undefined = callArguments[argumentMapping.textPlural!],
+        contextArgument: ts.Expression | undefined = callArguments[argumentMapping.context!];
 
     textArgument = checkAndConcatenateStrings(textArgument);
     textPluralArgument = checkAndConcatenateStrings(textPluralArgument);
@@ -119,7 +119,7 @@ function getAdditionExpression(expression: ts.Expression): ts.BinaryExpression |
 }
 
 function checkAndConcatenateStrings(expression: ts.Expression): ts.Expression {
-    let addition: ts.BinaryExpression;
+    let addition: ts.BinaryExpression | null;
 
     if (!expression || !(addition = getAdditionExpression(expression))) {
         return expression;
@@ -135,7 +135,7 @@ function checkAndConcatenateStrings(expression: ts.Expression): ts.Expression {
 }
 
 function processStringAddition(expression: ts.BinaryExpression, concatenated: ts.StringLiteral): boolean {
-    let addition: ts.BinaryExpression;
+    let addition: ts.BinaryExpression | null;
 
     if (isTextLiteral(expression.left)) {
         concatenated.text += expression.left.text;
