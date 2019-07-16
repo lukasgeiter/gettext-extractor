@@ -3,6 +3,7 @@ import { Validate } from '../../utils/validate';
 export interface IAttributeMapping {
     textPlural?: string;
     context?: string;
+    comment?: string;
 }
 
 export interface IHtmlExtractorOptions {

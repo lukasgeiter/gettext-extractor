@@ -13,6 +13,7 @@ msgid_plural "{{n}} notifications"
 msgstr[0] ""
 msgstr[1] ""
 
+#. Comment
 #: tests/e2e/fixtures/html/header.html:6
 msgctxt "Menu"
 msgid "Logout"

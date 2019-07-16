@@ -115,6 +115,52 @@ describe('HTML: Element Content Extractor', () => {
         });
     });
 
+    describe('comment', () => {
+
+        beforeEach(() => {
+            parser = new HtmlParser(builder, [
+                elementContentExtractor('translate', {
+                    attributes: {
+                        comment: 'comment'
+                    }
+                })
+            ]);
+        });
+
+        test('just text', () => {
+            parser.parseString(`<translate>Foo</translate>`);
+
+            expect(messages).toEqual([
+                {
+                    text: 'Foo'
+                }
+            ]);
+        });
+
+        test('with comment', () => {
+            parser.parseString(`<translate comment="Foo Bar">Foo</translate>`);
+
+            expect(messages).toEqual([
+                {
+                    text: 'Foo',
+                    comments: [
+                        'Foo Bar'
+                    ]
+                }
+            ]);
+        });
+
+        test('empty comment', () => {
+            parser.parseString(`<translate comment="">Foo</translate>`);
+
+            expect(messages).toEqual([
+                {
+                    text: 'Foo'
+                }
+            ]);
+        });
+    });
+
     describe('argument validation', () => {
 
         test('selector: (none)', () => {

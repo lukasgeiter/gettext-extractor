@@ -11,7 +11,8 @@ describe('HTML E2E', () => {
                 HtmlExtractors.elementContent('[translate]', {
                     attributes: {
                         textPlural: 'translate-plural',
-                        context: 'translation-context'
+                        context: 'translation-context',
+                        comment: 'translation-comment'
                     }
                 }),
                 HtmlExtractors.elementAttribute('[translate-alt]', 'alt')

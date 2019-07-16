@@ -121,6 +121,52 @@ describe('HTML: Element Attribute Extractor', () => {
         });
     });
 
+    describe('comment', () => {
+
+        beforeEach(() => {
+            parser = new HtmlParser(builder, [
+                elementAttributeExtractor('translate', 'text', {
+                    attributes: {
+                        comment: 'comment'
+                    }
+                })
+            ]);
+        });
+
+        test('just text', () => {
+            parser.parseString(`<translate text="Foo"></translate>`);
+
+            expect(messages).toEqual([
+                {
+                    text: 'Foo'
+                }
+            ]);
+        });
+
+        test('with comment', () => {
+            parser.parseString(`<translate text="Foo" comment="Foo Bar"></translate>`);
+
+            expect(messages).toEqual([
+                {
+                    text: 'Foo',
+                    comments: [
+                        'Foo Bar'
+                    ]
+                }
+            ]);
+        });
+
+        test('empty comment', () => {
+            parser.parseString(`<translate text="Foo" comment=""></translate>`);
+
+            expect(messages).toEqual([
+                {
+                    text: 'Foo'
+                }
+            ]);
+        });
+    });
+
     describe('argument validation', () => {
 
         test('selector: (none)', () => {

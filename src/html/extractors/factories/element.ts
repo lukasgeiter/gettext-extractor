@@ -20,7 +20,8 @@ export function elementExtractor(selector: string | IElementSelector[], textExtr
 
         if (selectors.anyMatch(element)) {
             let context: string | undefined,
-                textPlural: string | undefined;
+                textPlural: string | undefined,
+                comments: string[] = [];
 
             if (options.attributes && options.attributes.context) {
                 context = HtmlUtils.getAttributeValue(element, options.attributes.context) || undefined;
@@ -30,10 +31,17 @@ export function elementExtractor(selector: string | IElementSelector[], textExtr
                 textPlural = HtmlUtils.getAttributeValue(element, options.attributes.textPlural) || undefined;
             }
 
+            if (options.attributes && options.attributes.comment) {
+                let comment = HtmlUtils.getAttributeValue(element, options.attributes.comment);
+                if (comment) {
+                    comments.push(comment);
+                }
+            }
+
             let text = textExtractor(element);
 
             if (typeof text === 'string') {
-                addMessage({text, context, textPlural});
+                addMessage({text, context, textPlural, comments});
             }
         }
     };
