@@ -2510,7 +2510,7 @@ pn@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/pn/-/pn-1.1.0.tgz#e2f4cef0e219f463c179ab37463e4e1ecdccbafb"
 
-pofile@^1:
+pofile@1.0.x:
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/pofile/-/pofile-1.0.11.tgz#35aff58c17491d127a07336d5522ebc9df57c954"
 
