@@ -127,14 +127,14 @@ export abstract class JsCommentUtils {
             return false;
         }
 
-        let lineNumber = sourceFile.getLineAndCharacterOfPosition(nodes[index].getFullStart()).line;
+        let lineNumber = sourceFile.getLineAndCharacterOfPosition(nodes[index].getStart()).line;
         if (index > 0) {
             if (lineNumber === sourceFile.getLineAndCharacterOfPosition(nodes[index - 1].getEnd()).line) {
                 return false;
             }
         }
         if (index + 1 < nodes.length) {
-            if (lineNumber === sourceFile.getLineAndCharacterOfPosition(nodes[index + 1].getFullStart()).line) {
+            if (lineNumber === sourceFile.getLineAndCharacterOfPosition(nodes[index + 1].getStart()).line) {
                 return false;
             }
         }

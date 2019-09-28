@@ -349,6 +349,19 @@ describe('JS: comments', () => {
                     });
                 });
 
+                test('first property - trailing comma', () => {
+                    check(`(
+                        // Irrelevant leading line comment
+                        {
+                            // Irrelevant leading line comment
+                            foo: getText('Foo'), // Relevant trailing line comment
+                            bar: 42, // Irrelevant trailing line comment
+                        } // Irrelevant trailing line comment
+                    )`, {
+                        sameLineTrailing: ['Relevant trailing line comment']
+                    });
+                });
+
                 test('first property with extra whitespace', () => {
                     check(`(
                         // Irrelevant leading line comment
@@ -356,6 +369,19 @@ describe('JS: comments', () => {
                             // Irrelevant leading line comment
                             foo: getText('Foo')    ,    // Relevant trailing line comment
                             bar: 42 // Irrelevant trailing line comment
+                        } // Irrelevant trailing line comment
+                    )`, {
+                        sameLineTrailing: ['Relevant trailing line comment']
+                    });
+                });
+
+                test('first property with extra whitespace - trailing comma', () => {
+                    check(`(
+                        // Irrelevant leading line comment
+                        {
+                            // Irrelevant leading line comment
+                            foo: getText('Foo')    ,    // Relevant trailing line comment
+                            bar: 42, // Irrelevant trailing line comment
                         } // Irrelevant trailing line comment
                     )`, {
                         sameLineTrailing: ['Relevant trailing line comment']
@@ -375,6 +401,19 @@ describe('JS: comments', () => {
                     });
                 });
 
+                test('first property with directly relevant block comment - trailing comma', () => {
+                    check(`(
+                        // Irrelevant leading line comment
+                        {
+                            // Irrelevant leading line comment 
+                            foo: getText('Foo') /* Relevant trailing block comment */, // Irrelevant trailing line comment
+                            bar: 42, // Irrelevant trailing line comment
+                        } // Irrelevant trailing line comment
+                    )`, {
+                        sameLineTrailing: ['Relevant trailing block comment']
+                    });
+                });
+
                 test('second property', () => {
                     check(`(
                         // Irrelevant leading line comment
@@ -382,6 +421,19 @@ describe('JS: comments', () => {
                             bar: 42, // Irrelevant trailing line comment
                             // Irrelevant leading line comment
                             foo: getText('Foo') // Relevant trailing line comment
+                        } // Irrelevant trailing line comment
+                    )`, {
+                        sameLineTrailing: ['Relevant trailing line comment']
+                    });
+                });
+
+                test('second property - trailing comma', () => {
+                    check(`(
+                        // Irrelevant leading line comment
+                        {
+                            bar: 42, // Irrelevant trailing line comment
+                            // Irrelevant leading line comment
+                            foo: getText('Foo'), // Relevant trailing line comment
                         } // Irrelevant trailing line comment
                     )`, {
                         sameLineTrailing: ['Relevant trailing line comment']
@@ -401,6 +453,19 @@ describe('JS: comments', () => {
                     });
                 });
 
+                test('second property with extra whitespace - trailing comma', () => {
+                    check(`(
+                        // Irrelevant leading line comment
+                        {
+                            bar: 42, // Irrelevant trailing line comment
+                            // Irrelevant leading line comment
+                            foo: getText('Foo')    ,    // Relevant trailing line comment
+                        } // Irrelevant trailing line comment
+                    )`, {
+                        sameLineTrailing: ['Relevant trailing line comment']
+                    });
+                });
+
                 test('second property with directly relevant block comment', () => {
                     check(`(
                         // Irrelevant leading line comment
@@ -414,6 +479,19 @@ describe('JS: comments', () => {
                     });
                 });
 
+                test('second property with directly relevant block comment - trailing comma', () => {
+                    check(`(
+                        // Irrelevant leading line comment
+                        {
+                            bar: 42, // Irrelevant trailing line comment
+                            // Irrelevant leading line comment
+                            foo: getText('Foo'), /* Relevant trailing block comment */ // Relevant trailing line comment
+                        } // Irrelevant trailing line comment
+                    )`, {
+                        sameLineTrailing: ['Relevant trailing block comment', 'Relevant trailing line comment']
+                    });
+                });
+
                 test('assignment shorthand', () => {
                     check(`(
                         // Irrelevant leading line comment
@@ -421,6 +499,19 @@ describe('JS: comments', () => {
                             bar, // Irrelevant trailing line comment
                             // Irrelevant leading line comment
                             foo: getText('Foo') // Relevant trailing line comment
+                        } // Irrelevant trailing line comment
+                    )`, {
+                        sameLineTrailing: ['Relevant trailing line comment']
+                    });
+                });
+
+                test('assignment shorthand - trailing comma', () => {
+                    check(`(
+                        // Irrelevant leading line comment
+                        {
+                            bar, // Irrelevant trailing line comment
+                            // Irrelevant leading line comment
+                            foo: getText('Foo'), // Relevant trailing line comment
                         } // Irrelevant trailing line comment
                     )`, {
                         sameLineTrailing: ['Relevant trailing line comment']
