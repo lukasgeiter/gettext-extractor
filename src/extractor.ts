@@ -4,6 +4,7 @@ import * as pofile from 'pofile';
 import { CatalogBuilder, IContext, IMessage } from './builder';
 import { JsParser, IJsExtractorFunction } from './js/parser';
 import { HtmlParser, IHtmlExtractorFunction } from './html/parser';
+import { RegexParser, IRegexExtractorFunction } from './regex/parser';
 import { StatsOutput } from './utils/output';
 import { Validate } from './utils/validate';
 
@@ -43,6 +44,12 @@ export class GettextExtractor {
         Validate.optional.nonEmptyArray({extractors});
 
         return new HtmlParser(this.builder, extractors, this.stats);
+    }
+
+    public createRegexParser(extractors?: IRegexExtractorFunction[]): RegexParser {
+        Validate.optional.nonEmptyArray({ extractors });
+
+        return new RegexParser(this.builder, extractors, this.stats);
     }
 
     public addMessage(message: IMessage): void {
