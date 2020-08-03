@@ -88,7 +88,7 @@ export class ElementSelectorSet {
     }
 
     public anyMatch(element: Element): boolean {
-        return this.selectors.reduce((matched, s) => matched || s.matches(element), false);
+        return this.selectors.reduce((matched, s) => matched || s.matches(element), false as boolean);
     }
 
     public allMatch(element: Element): boolean {
