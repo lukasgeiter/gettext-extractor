@@ -60,7 +60,7 @@ export function registerCommonParserTests(parserClass: any): void {
     });
 
     test('addMessage call', () => {
-        let extractor = jest.fn().mockImplementationOnce((node: any, file: any, addMessage: IAddMessageCallback) => {
+        let extractor = jest.fn().mockImplementationOnce((node: any, source: string, file: any, addMessage: IAddMessageCallback) => {
             addMessage({
                 text: 'Foo'
             });
@@ -117,7 +117,7 @@ export function registerCommonParserTests(parserClass: any): void {
         });
 
         test('some files with messages', () => {
-            let extractor = jest.fn().mockImplementationOnce((node: any, file: any, addMessage: IAddMessageCallback) => {
+            let extractor = jest.fn().mockImplementationOnce((node: any, source: string, file: any, addMessage: IAddMessageCallback) => {
                 addMessage({
                     text: 'Foo'
                 });
@@ -134,7 +134,7 @@ export function registerCommonParserTests(parserClass: any): void {
         });
 
         test('all files with messages', () => {
-            let extractor = jest.fn().mockImplementation((node: any, file: any, addMessage: IAddMessageCallback) => {
+            let extractor = jest.fn().mockImplementation((node: any, source: string, file: any, addMessage: IAddMessageCallback) => {
                 addMessage({
                     text: 'Foo'
                 });
