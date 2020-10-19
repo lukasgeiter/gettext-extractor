@@ -1,7 +1,8 @@
 language: node_js
 node_js:
-  - 6
-  - 7
+  - node
+  - lts/*
+  - 10
 
 branches:
   only:
@@ -21,7 +22,7 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
-    node: '7'
+    node: node
 
 notifications:
   email:
