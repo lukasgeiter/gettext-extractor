@@ -8,8 +8,7 @@
         "strict": true
     },
     "files": [
-        "src/index.ts",
-        "modules.d.ts"
+        "src/index.ts"
     ],
     "exclude": [
         "node_modules"
