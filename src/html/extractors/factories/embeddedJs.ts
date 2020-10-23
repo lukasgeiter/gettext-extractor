@@ -10,7 +10,7 @@ export function embeddedJsExtractor(selector: string, jsParser: JsParser): IHtml
 
     let selectors = new ElementSelectorSet(selector);
 
-    return (node: Node, fileName: string) => {
+    return (node: Node, source: string, fileName: string) => {
         if (typeof (<Element>node).tagName !== 'string') {
             return;
         }
@@ -18,12 +18,12 @@ export function embeddedJsExtractor(selector: string, jsParser: JsParser): IHtml
         let element = <Element>node;
 
         if (selectors.anyMatch(element)) {
-            let source = HtmlUtils.getElementContent(element, {
+            let content = HtmlUtils.getElementContent(element, {
                 trimWhiteSpace: false,
                 preserveIndentation: true,
                 replaceNewLines: false
             });
-            jsParser.parseString(source, fileName, {
+            jsParser.parseString(content, fileName, {
                 lineNumberStart: element.sourceCodeLocation && element.sourceCodeLocation.startLine
             });
         }

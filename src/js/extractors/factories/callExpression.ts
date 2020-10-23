@@ -40,7 +40,7 @@ export function callExpressionExtractor(calleeName: string | string[], options: 
         }
     }
 
-    return (node: ts.Node, sourceFile: ts.SourceFile, addMessage: IAddMessageCallback) => {
+    return (node: ts.Node, source: string, sourceFile: ts.SourceFile, addMessage: IAddMessageCallback) => {
         if (node.kind === ts.SyntaxKind.CallExpression) {
             let callExpression = <ts.CallExpression>node;
 

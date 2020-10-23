@@ -17,7 +17,7 @@ describe('HtmlParser', () => {
             builderMock = <any>{
                 addMessage: jest.fn()
             };
-            parser = new HtmlParser(builderMock, [(node: Node, fileName: string, addMessage) => {
+            parser = new HtmlParser(builderMock, [(node: Node, source: string, fileName: string, addMessage) => {
                 if (node.nodeName === '#text') {
                     addMessage({
                         text: (node as TextNode).value
@@ -149,7 +149,7 @@ describe('HtmlParser', () => {
         builderMock = <any>{
             addMessage: jest.fn()
         };
-        parser = new HtmlParser(builderMock, [(node: Node, fileName: string, addMessage) => {
+        parser = new HtmlParser(builderMock, [(node: Node, source: string, fileName: string, addMessage) => {
             if (node.nodeName === '#text') {
                 addMessage({
                     text: (node as TextNode).value

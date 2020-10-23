@@ -18,7 +18,7 @@ describe('JsParser', () => {
             builderMock = <any>{
                 addMessage: jest.fn()
             };
-            parser = new JsParser(builderMock, [(node: ts.Node, sourceFile: ts.SourceFile, addMessage) => {
+            parser = new JsParser(builderMock, [(node: ts.Node, source: string, sourceFile: ts.SourceFile, addMessage) => {
                 if (node.kind === ts.SyntaxKind.StringLiteral) {
                     addMessage({
                         text: (<ts.StringLiteral>node).text
