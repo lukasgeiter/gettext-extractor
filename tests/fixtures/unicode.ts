@@ -17,3 +17,11 @@ export const UnicodeSamples = {
     thai: `๏ เป็นมนุษย์สุดประเสริฐเลิศคุณค่า กว่าบรรดาฝูงสัตว์เดรัจฉาน จงฝ่าฟันพัฒนาวิชาการ อย่าล้างผลาญฤๅเข่นฆ่าบีฑาใคร ไม่ถือโทษโกรธแช่งซัดฮึดฮัดด่า หัดอภัยเหมือนกีฬาอัชฌาสัย ปฏิบัติประพฤติกฎกำหนดใจ พูดจาให้จ๊ะๆ จ๋าๆ น่าฟังเอย ฯ`,
     turkish: `Pijamalı hasta, yağız şoföre çabucak güvendi`
 };
+
+export function createUnicodeTests(callback: (text: string) => void): void {
+    for (let [language, text] of Object.entries(UnicodeSamples)) {
+        test(language, () => {
+            callback(text);
+        });
+    }
+}
