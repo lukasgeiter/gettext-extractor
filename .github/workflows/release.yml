@@ -33,6 +33,7 @@ jobs:
         with:
           node-version: lts/*
           cache: yarn
+          registry-url: https://registry.npmjs.org
       - name: Install dependencies
         run: yarn install
       - name: Build
