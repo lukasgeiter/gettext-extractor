@@ -4,6 +4,8 @@ import { Validate } from '../../../utils/validate';
 import { IContentOptions, IContentExtractorOptions, validateContentOptions } from '../../../utils/content';
 import { IHtmlExtractorOptions, validateOptions } from '../common';
 import { elementExtractor } from './element';
+import { Element } from '../../parser';
+
 
 export interface IElementContentExtractorOptions extends IHtmlExtractorOptions, IContentExtractorOptions {}
 
@@ -15,7 +17,7 @@ export function elementContentExtractor(selector: string, options: IElementConte
     let contentOptions: IContentOptions = {
         trimWhiteSpace: true,
         preserveIndentation: false,
-        replaceNewLines: false
+        replaceNewLines: false,
     };
 
     if (options.content) {
@@ -30,7 +32,10 @@ export function elementContentExtractor(selector: string, options: IElementConte
         }
     }
 
-    return elementExtractor(selector, element => {
-        return HtmlUtils.getElementContent(element, contentOptions);
+    return elementExtractor(selector, (element: Element, source: string) => {
+        if (options.rawHtml)
+            return HtmlUtils.getElementContentSource(element, source, contentOptions);
+        else
+            return HtmlUtils.getElementContent(element, contentOptions);
     }, options);
 }

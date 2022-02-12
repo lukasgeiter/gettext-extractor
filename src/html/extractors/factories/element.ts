@@ -5,13 +5,13 @@ import { Element, Node } from '../../parser';
 import { HtmlUtils } from '../../utils';
 import { IHtmlExtractorOptions } from '../common';
 
-export type ITextExtractor = (element: Element) => string | null;
+export type ITextExtractor = (element: Element, source: string) => string | null;
 
 export function elementExtractor(selector: string | IElementSelector[], textExtractor: ITextExtractor, options: IHtmlExtractorOptions = {}): IHtmlExtractorFunction {
 
     let selectors = new ElementSelectorSet(selector);
 
-    return (node: Node, fileName: string, addMessage: IAddMessageCallback) => {
+    return (node: Node, source: string, fileName: string, addMessage: IAddMessageCallback) => {
         if (typeof (<Element>node).tagName !== 'string') {
             return;
         }
@@ -38,7 +38,7 @@ export function elementExtractor(selector: string | IElementSelector[], textExtr
                 }
             }
 
-            let text = textExtractor(element);
+            let text = textExtractor(element, source);
 
             if (typeof text === 'string') {
                 addMessage({text, context, textPlural, comments});

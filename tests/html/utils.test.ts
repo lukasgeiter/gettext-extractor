@@ -5,7 +5,8 @@ import { Element } from '../../src/html/parser';
 describe('HTML: Utils', () => {
 
     function createElement(source: string): Element {
-        return <Element>(<any>parse5.parse(source)).childNodes[0].childNodes[1].childNodes[0];
+        const parsed = parse5.parse(source, { sourceCodeLocationInfo: true });
+        return <Element>(<any>parsed).childNodes[0].childNodes[1].childNodes[0];
     }
 
     describe('getAttributeValue', () => {
@@ -45,6 +46,14 @@ describe('HTML: Utils', () => {
             });
         }
 
+        function getContentSource(source: string): string {
+            return HtmlUtils.getElementContentSource(createElement(source), source, {
+                preserveIndentation: true,
+                trimWhiteSpace: true,
+                replaceNewLines: false
+            });
+        }
+
         test('single line', () => {
             expect(getContent('<div>Foo Bar</div>')).toBe('Foo Bar');
         });
@@ -65,11 +74,21 @@ describe('HTML: Utils', () => {
             );
         });
 
-        describe('un-escaping', () => {
+        describe('un-escaping ampersand', () => {
 
             test('&', () => {
                 expect(getContent('<div>Foo & Bar</div>')).toBe('Foo & Bar');
+                expect(getContentSource('<div>Foo & Bar</div>')).toBe('Foo & Bar');
             });
+
+            test('&amp;', () => {
+                // might want to change this https://github.com/lukasgeiter/gettext-extractor/issues/36
+                expect(getContent('<div>Foo &amp; Bar</div>')).toBe('Foo & Bar');
+                expect(getContentSource('<div>Foo &amp; Bar</div>')).toBe('Foo &amp; Bar');
+            });
+        });
+
+        describe('un-escaping less than / greater than', () => {
 
             test('<', () => {
                 expect(getContent('<div>Foo < Bar</div>')).toBe('Foo < Bar');
@@ -77,6 +96,14 @@ describe('HTML: Utils', () => {
 
             test('>', () => {
                 expect(getContent('<div>Foo > Bar</div>')).toBe('Foo > Bar');
+            });
+        });
+
+        describe('un-escaping other html entities', () => {
+
+            test('&hellip;', () => {
+                expect(getContent('<div>Foo &hellip; Bar</div>')).toBe('Foo … Bar');
+                expect(getContentSource('<div>Foo &hellip; Bar</div>')).toBe('Foo &hellip; Bar');
             });
         });
     });
