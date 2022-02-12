@@ -135,6 +135,22 @@ describe('Element Selector', () => {
                 expect(selector.matches(createElement('<p></p>'))).toBe(false);
             });
 
+            test('attribute value empty string', () => {
+                let selector = new ElementSelector({
+                    attributes: [
+                        {
+                            name: 'foo',
+                            value: ''
+                        }
+                    ]
+                });
+
+                expect(selector.matches(createElement('<p foo=""></p>'))).toBe(true);
+                expect(selector.matches(createElement('<p foo></p>'))).toBe(true);
+                expect(selector.matches(createElement('<p bar></p>'))).toBe(false);
+                expect(selector.matches(createElement('<p></p>'))).toBe(false);
+            });
+
             test('multiple attribute values', () => {
                 let selector = new ElementSelector({
                     attributes: [

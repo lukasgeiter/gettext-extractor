@@ -164,7 +164,7 @@ export class ElementSelector implements IElementSelector {
             if (elementAttributeValue === null) {
                 return false;
             }
-            if (attribute.value) {
+            if (attribute.value !== undefined) {
                 switch (attribute.operator) {
                     case '^=':
                         if (elementAttributeValue.slice(0, attribute.value.length) !== attribute.value) {
