@@ -2,7 +2,7 @@ import * as ts from 'typescript';
 
 import { IJsExtractorFunction } from '../../parser';
 import { Validate } from '../../../utils/validate';
-import { IContentOptions, normalizeContent, validateContentOptions } from '../../../utils/content';
+import { IContentOptions, normalizeContent, getContentOptions, validateContentOptions } from '../../../utils/content';
 import { IJsExtractorOptions, validateOptions, IArgumentIndexMapping } from '../common';
 import { JsUtils } from '../../utils';
 import { IAddMessageCallback, IMessageData } from '../../../parser';
@@ -22,23 +22,11 @@ export function callExpressionExtractor(calleeName: string | string[], options: 
     validateOptions(options);
     validateContentOptions(options);
 
-    let contentOptions: IContentOptions = {
+    let contentOptions: IContentOptions = getContentOptions(options, {
         trimWhiteSpace: false,
         preserveIndentation: true,
         replaceNewLines: false
-    };
-
-    if (options.content) {
-        if (options.content.trimWhiteSpace !== undefined) {
-            contentOptions.trimWhiteSpace = options.content.trimWhiteSpace;
-        }
-        if (options.content.preserveIndentation !== undefined) {
-            contentOptions.preserveIndentation = options.content.preserveIndentation;
-        }
-        if (options.content.replaceNewLines !== undefined) {
-            contentOptions.replaceNewLines = options.content.replaceNewLines;
-        }
-    }
+    });
 
     return (node: ts.Node, sourceFile: ts.SourceFile, addMessage: IAddMessageCallback) => {
         if (node.kind === ts.SyntaxKind.CallExpression) {

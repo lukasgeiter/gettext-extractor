@@ -35,6 +35,34 @@ describe('HTML: Utils', () => {
         });
     });
 
+    describe('getNormalizedAttributeValue', () => {
+
+        test('indendation', () => {
+            expect(HtmlUtils.getNormalizedAttributeValue(createElement('<div foo="\n' +
+                '   Foo\n' +
+                '   Bar\n' +
+                '" />'), 'foo', {
+                    preserveIndentation: true,
+                    trimWhiteSpace: true,
+                    replaceNewLines: false
+                })).toBe(
+                '   Foo\n' +
+                '   Bar'
+            );
+        });
+
+        test('new lines', () => {
+            expect(HtmlUtils.getNormalizedAttributeValue(createElement('<div foo="\n' +
+                '   Foo\n' +
+                '   Bar\n' +
+                '" />'), 'foo', {
+                preserveIndentation: false,
+                trimWhiteSpace: true,
+                replaceNewLines: ' '
+            })).toBe('Foo Bar');
+        });
+    });
+
     describe('getElementContent', () => {
 
         function getContent(source: string): string {

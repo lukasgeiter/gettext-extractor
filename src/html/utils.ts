@@ -11,7 +11,17 @@ export abstract class HtmlUtils {
                 return attribute.value;
             }
         }
+
         return null;
+    }
+
+    public static getNormalizedAttributeValue(element: Element, attributeName: string, options: IContentOptions): string | null {
+        let value = HtmlUtils.getAttributeValue(element, attributeName);
+        if (value === null) {
+            return null;
+        }
+
+        return normalizeContent(value, options);
     }
 
     public static getElementContent(element: Element, options: IContentOptions): string {

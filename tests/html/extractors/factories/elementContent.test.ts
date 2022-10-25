@@ -273,4 +273,47 @@ describe('HTML: Element Content Extractor', () => {
             }).toThrowError(`Property 'options.content.replaceNewLines' must be false or a string`);
         });
     });
+
+    describe('argument proxying', () => {
+        test('options.content.options: applies for all attributes', () => {
+            parser = new HtmlParser(builder, [
+                elementContentExtractor('translate', {
+                    attributes: {
+                        textPlural: 'plural',
+                        context: 'context',
+                        comment: 'comment'
+                    },
+                    content: {
+                        preserveIndentation: false,
+                        replaceNewLines: '',
+                        trimWhiteSpace: true
+                    }
+                })
+            ]);
+
+            parser.parseString(`
+                <translate
+                    plural="
+                        Foos
+                    "
+                    comment="
+                        Comment
+                    "
+                    context="
+                        Context
+                    ">
+                    Foo
+                </translate>
+            `);
+
+            expect(messages).toEqual([
+                {
+                    text: 'Foo',
+                    textPlural: 'Foos',
+                    context: 'Context',
+                    comments: ['Comment']
+                }
+            ]);
+        });
+    });
 });

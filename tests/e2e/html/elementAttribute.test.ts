@@ -222,6 +222,54 @@ describe('argument validation', () => {
             });
         }).toThrowError(`Property 'options.attributes.comment' must be a string`);
     });
+
+    test('options.content: wrong type', () => {
+        expect(() => {
+            (<any>HtmlExtractors.elementAttribute)('[translate]', 'translate', {
+                content: 'foo'
+            });
+        }).toThrowError(`Property 'options.content' must be an object`);
+    });
+
+    test('options.content.trimWhiteSpace: wrong type', () => {
+        expect(() => {
+            (<any>HtmlExtractors.elementAttribute)('[translate]', 'translate', {
+                content: {
+                    trimWhiteSpace: 'foo'
+                }
+            });
+        }).toThrowError(`Property 'options.content.trimWhiteSpace' must be a boolean`);
+    });
+
+    test('options.content.preserveIndentation: wrong type', () => {
+        expect(() => {
+            (<any>HtmlExtractors.elementAttribute)('[translate]', 'translate', {
+                content: {
+                    preserveIndentation: 'foo'
+                }
+            });
+        }).toThrowError(`Property 'options.content.preserveIndentation' must be a boolean`);
+    });
+
+    test('options.content.replaceNewLines: wrong type', () => {
+        expect(() => {
+            (<any>HtmlExtractors.elementAttribute)('[translate]', 'translate', {
+                content: {
+                    replaceNewLines: 42
+                }
+            });
+        }).toThrowError(`Property 'options.content.replaceNewLines' must be false or a string`);
+    });
+
+    test('options.content.replaceNewLines: true', () => {
+        expect(() => {
+            (<any>HtmlExtractors.elementAttribute)('[translate]', 'translate', {
+                content: {
+                    replaceNewLines: true
+                }
+            });
+        }).toThrowError(`Property 'options.content.replaceNewLines' must be false or a string`);
+    });
 });
 
 function assertMessages(extractorFunction: IHtmlExtractorFunction, source: string, ...expected: Partial<IMessage>[]): () => void {
