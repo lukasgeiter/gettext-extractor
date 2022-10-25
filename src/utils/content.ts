@@ -10,6 +10,24 @@ export interface IContentExtractorOptions {
     content?: Partial<IContentOptions>;
 }
 
+export function getContentOptions(extractorOptions: IContentExtractorOptions, defaultOptions: IContentOptions): IContentOptions {
+    let contentOptions = defaultOptions;
+
+    if (extractorOptions.content) {
+        if (extractorOptions.content.trimWhiteSpace !== undefined) {
+            contentOptions.trimWhiteSpace = extractorOptions.content.trimWhiteSpace;
+        }
+        if (extractorOptions.content.preserveIndentation !== undefined) {
+            contentOptions.preserveIndentation = extractorOptions.content.preserveIndentation;
+        }
+        if (extractorOptions.content.replaceNewLines !== undefined) {
+            contentOptions.replaceNewLines = extractorOptions.content.replaceNewLines;
+        }
+    }
+
+    return contentOptions;
+}
+
 export function validateContentOptions(options: IContentExtractorOptions): void {
     Validate.optional.booleanProperty(options, 'options.content.trimWhiteSpace');
     Validate.optional.booleanProperty(options, 'options.content.preserveIndentation');

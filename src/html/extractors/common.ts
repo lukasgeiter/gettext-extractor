@@ -1,4 +1,5 @@
 import { Validate } from '../../utils/validate';
+import { IContentExtractorOptions } from '../../utils/content';
 
 export interface IAttributeMapping {
     textPlural?: string;
@@ -6,7 +7,7 @@ export interface IAttributeMapping {
     comment?: string;
 }
 
-export interface IHtmlExtractorOptions {
+export interface IHtmlExtractorOptions extends IContentExtractorOptions {
     attributes?: IAttributeMapping;
 }
 

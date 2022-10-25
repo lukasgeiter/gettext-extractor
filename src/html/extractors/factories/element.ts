@@ -4,6 +4,7 @@ import { IElementSelector, ElementSelectorSet } from '../../selector';
 import { Element, Node } from '../../parser';
 import { HtmlUtils } from '../../utils';
 import { IHtmlExtractorOptions } from '../common';
+import { getContentOptions, IContentOptions } from '../../../utils/content';
 
 export type ITextExtractor = (element: Element) => string | null;
 
@@ -21,18 +22,23 @@ export function elementExtractor(selector: string | IElementSelector[], textExtr
         if (selectors.anyMatch(element)) {
             let context: string | undefined,
                 textPlural: string | undefined,
-                comments: string[] = [];
+                comments: string[] = [],
+                contentOptions: IContentOptions = getContentOptions(options, {
+                    trimWhiteSpace: true,
+                    preserveIndentation: false,
+                    replaceNewLines: false
+                });
 
             if (options.attributes && options.attributes.context) {
-                context = HtmlUtils.getAttributeValue(element, options.attributes.context) || undefined;
+                context = HtmlUtils.getNormalizedAttributeValue(element, options.attributes.context, contentOptions) || undefined;
             }
 
             if (options.attributes && options.attributes.textPlural) {
-                textPlural = HtmlUtils.getAttributeValue(element, options.attributes.textPlural) || undefined;
+                textPlural = HtmlUtils.getNormalizedAttributeValue(element, options.attributes.textPlural, contentOptions) || undefined;
             }
 
             if (options.attributes && options.attributes.comment) {
-                let comment = HtmlUtils.getAttributeValue(element, options.attributes.comment);
+                let comment = HtmlUtils.getNormalizedAttributeValue(element, options.attributes.comment, contentOptions);
                 if (comment) {
                     comments.push(comment);
                 }
