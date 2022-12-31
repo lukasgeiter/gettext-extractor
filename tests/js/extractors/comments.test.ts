@@ -311,6 +311,45 @@ describe('JS: comments', () => {
                         });
                     });
                 });
+
+                describe('without initializer', () => {
+
+                    describe('before', () => {
+
+                        test('line comments', () => {
+                            check(`
+                                // Irrelevant leading line comment
+                                let bar, foo = getText('Foo'); // Irrelevant trailing line comment
+                            `, {});
+                        });
+
+                        test('block comments', () => {
+                            check(`
+                                let bar /* Irrelevant leading block comment */, foo = getText('Foo') /* Relevant trailing block comment */; /* Irrelevant trailing block comment */
+                            `, {
+                                sameLineTrailing: ['Relevant trailing block comment']
+                            });
+                        });
+                    });
+
+                    describe('after', () => {
+
+                        test('line comments', () => {
+                            check(`
+                                // Irrelevant leading line comment
+                                let foo = getText('Foo'), bar; // Irrelevant trailing line comment
+                            `, {});
+                        });
+
+                        test('block comments', () => {
+                            check(`
+                                let foo = getText('Foo') /* Relevant trailing block comment */, bar /* Irrelevant leading block comment */; /* Irrelevant trailing block comment */
+                            `, {
+                                sameLineTrailing: ['Relevant trailing block comment']
+                            });
+                        });
+                    });
+                });
             });
         });
 

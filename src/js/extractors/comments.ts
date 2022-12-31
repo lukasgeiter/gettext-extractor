@@ -80,7 +80,7 @@ export abstract class JsCommentUtils {
                     if (variableDeclarationList.declarations.length === 1) {
                         return this.getExtractionPositions(variableDeclarationList.parent, sourceFile);
                     } else {
-                        if (this.nodeIsOnSeparateLine(node, variableDeclarationList.declarations.map(d => d.initializer) as ReadonlyArray<ts.Node>, sourceFile)) {
+                        if (this.nodeIsOnSeparateLine(node, variableDeclarationList.declarations.map(d => d.initializer ?? d.name) as ReadonlyArray<ts.Node>, sourceFile)) {
                             if (variableDeclarationList.declarations[variableDeclarationList.declarations.length - 1].initializer === node) {
                                 skipToSemicolon();
                             } else {

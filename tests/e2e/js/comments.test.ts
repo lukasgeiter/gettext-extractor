@@ -277,6 +277,49 @@ describe('variable assignment', () => {
                 }
             ));
         });
+
+        describe('without initializer', () => {
+
+            describe('before', () => {
+
+                describe('line comments', assertComments(
+                    `
+                        // Irrelevant leading line comment
+                        let bar, foo = getText('Foo'); // Irrelevant trailing line comment
+                    `,
+                    {}
+                ));
+
+                describe('block comments', assertComments(
+                    `
+                        let bar /* Irrelevant leading block comment */, foo = getText('Foo') /* Relevant trailing block comment */; /* Irrelevant trailing block comment */
+                    `,
+                    {
+                        sameLineTrailing: ['Relevant trailing block comment']
+                    }
+                ));
+            });
+
+            describe('after', () => {
+
+                describe('line comments', assertComments(
+                    `
+                        // Irrelevant leading line comment
+                        let foo = getText('Foo'), bar; // Irrelevant trailing line comment
+                    `,
+                    {}
+                ));
+
+                describe('block comments', assertComments(
+                    `
+                        let foo = getText('Foo') /* Relevant trailing block comment */, bar /* Irrelevant leading block comment */; /* Irrelevant trailing block comment */
+                    `,
+                    {
+                        sameLineTrailing: ['Relevant trailing block comment']
+                    }
+                ));
+            });
+        });
     });
 });
 
