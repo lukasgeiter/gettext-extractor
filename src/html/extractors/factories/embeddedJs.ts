@@ -5,12 +5,12 @@ import { HtmlUtils } from '../../utils';
 import { Validate } from '../../../utils/validate';
 
 export function embeddedJsExtractor(selector: string, jsParser: JsParser): IHtmlExtractorFunction {
-    Validate.required.nonEmptyString({selector});
-    Validate.required.argument({jsParser});
+    Validate.required.nonEmptyString({ selector });
+    Validate.required.argument({ jsParser });
 
     let selectors = new ElementSelectorSet(selector);
 
-    return (node: Node, fileName: string) => {
+    return (node: Node, fileName: string, _, lineNumberStart) => {
         if (typeof (<Element>node).tagName !== 'string') {
             return;
         }
@@ -23,8 +23,11 @@ export function embeddedJsExtractor(selector: string, jsParser: JsParser): IHtml
                 preserveIndentation: true,
                 replaceNewLines: false
             });
+            if (element.sourceCodeLocation && element.sourceCodeLocation.startLine) {
+                lineNumberStart = lineNumberStart + element.sourceCodeLocation.startLine - 1;
+            }
             jsParser.parseString(source, fileName, {
-                lineNumberStart: element.sourceCodeLocation && element.sourceCodeLocation.startLine
+                lineNumberStart
             });
         }
     };

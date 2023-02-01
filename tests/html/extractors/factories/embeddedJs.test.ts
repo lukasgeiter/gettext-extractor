@@ -27,6 +27,14 @@ describe('HTML: Embedded JS Extractor', () => {
             });
         });
 
+        test('with lineNumberStart option', () => {
+            htmlParser.parseString(`<script>Foo</script>`, 'foo.html', { lineNumberStart: 10 });
+
+            expect(jsParserMock.parseString).toHaveBeenCalledWith('Foo', 'foo.html', {
+                lineNumberStart: 10
+            });
+        });
+
         test('separate line', () => {
             htmlParser.parseString(`<script>\nFoo\n</script>`, 'foo.html');
 
