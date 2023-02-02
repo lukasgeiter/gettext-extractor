@@ -24,10 +24,12 @@ export function embeddedJsExtractor(selector: string, jsParser: JsParser): IHtml
                 replaceNewLines: false
             });
             if (element.sourceCodeLocation && element.sourceCodeLocation.startLine) {
-                lineNumberStart = lineNumberStart + element.sourceCodeLocation.startLine - 1;
+                lineNumberStart = lineNumberStart + element.sourceCodeLocation.startLine;
             }
             jsParser.parseString(source, fileName, {
-                lineNumberStart
+                // since in src/js/parser.ts we have return `lineNumberStart + location.line(1-based)`
+                // so here should minus one
+                lineNumberStart: lineNumberStart - 1
             });
         }
     };
