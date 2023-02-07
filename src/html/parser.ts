@@ -7,7 +7,7 @@ export type Node = parse5.DefaultTreeNode;
 export type TextNode = parse5.DefaultTreeTextNode;
 export type Element = parse5.DefaultTreeElement;
 
-export type IHtmlExtractorFunction = (node: Node, fileName: string, addMessage: IAddMessageCallback) => void;
+export type IHtmlExtractorFunction = (node: Node, fileName: string, addMessage: IAddMessageCallback, lineNumberStart: number) => void;
 
 export class HtmlParser extends Parser<IHtmlExtractorFunction, IParseOptions> {
 
@@ -25,7 +25,7 @@ export class HtmlParser extends Parser<IHtmlExtractorFunction, IParseOptions> {
         });
 
         for (let extractor of this.extractors) {
-            extractor(node, fileName, addMessageCallback);
+            extractor(node, fileName, addMessageCallback, lineNumberStart);
         }
 
         let childNodes = node.content ? node.content.childNodes : node.childNodes;
