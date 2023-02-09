@@ -1,0 +1,24 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#: tests/e2e/fixtures/html/linenumberStart.html:13
+msgid "%{n} apple"
+msgid_plural "%{n} apples"
+msgstr[0] ""
+msgstr[1] ""
+
+#: tests/e2e/fixtures/html/linenumberStart.html:16
+msgid "msg 1"
+msgstr ""
+
+#: tests/e2e/fixtures/html/linenumberStart.html:18
+msgid "msg 2"
+msgstr ""
+
+#: tests/e2e/fixtures/html/linenumberStart.html:12
+msgctxt "title"
+msgid "%{n} apple"
+msgid_plural "%{n} apples"
+msgstr[0] ""
+msgstr[1] ""

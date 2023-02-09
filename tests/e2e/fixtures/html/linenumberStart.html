@@ -1,0 +1,10 @@
+<template>
+    <span :title="_xn('title', '%{n} apple', '%{n} apples', n, {n:''+n})">
+        {{ _n( '%{n} apple', '%{n} apples', n, {n:''+n}) }}
+    </span>
+    <div>
+        {{ __('msg 1') }}
+        <br>
+        {{ __('msg 2') }}
+    </div>
+</template>
