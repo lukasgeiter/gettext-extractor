@@ -13,18 +13,18 @@ export function embeddedAttrJsExtractor(selector: string, jsParser: JsParser): I
     Validate.required.argument({ jsParser });
 
     return (node: Node, fileName: string, _, lineNumberStart) => {
-        if (typeof (node as Element).tagName !== "string") {
+        if (typeof (node as Element).tagName !== 'string') {
             return;
         }
 
         const element = node as Element;
         element.attrs.forEach((attr) => {
-            const startLine = element.sourceCodeLocation?.attrs[attr.name]?.startLine
+            const startLine = element.sourceCodeLocation?.attrs[attr.name]?.startLine;
             if (startLine) {
-                lineNumberStart = lineNumberStart + startLine - 1
+                lineNumberStart = lineNumberStart + startLine - 1;
             }
             jsParser.parseString(attr.value, fileName, {
-                lineNumberStart,
+                lineNumberStart
             });
         });
     };
