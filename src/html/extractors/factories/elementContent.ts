@@ -5,13 +5,8 @@ import { getContentOptions, IContentOptions, validateContentOptions } from '../.
 import { IHtmlExtractorOptions, validateOptions } from '../common';
 import { elementExtractor } from './element';
 
-/**
- * elementContentExtractor extractor messages from element content:
- *
- *     <translate context='ctx' plural='plural msg'>msgid</translate>
- */
 export function elementContentExtractor(selector: string, options: IHtmlExtractorOptions = {}): IHtmlExtractorFunction {
-    Validate.required.nonEmptyString({ selector });
+    Validate.required.nonEmptyString({selector});
     validateOptions(options);
     validateContentOptions(options);
 

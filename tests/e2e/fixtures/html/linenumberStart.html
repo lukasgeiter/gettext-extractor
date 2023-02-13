@@ -1,5 +1,5 @@
 <template>
-    <span :title="_xn('title', '%{n} apple', '%{n} apples', n, {n:''+n})">
+    <span :title="_xn('title', '%{n} apple', '%{n} apples', n, {n:''+n})" data-name="__('whatever')">
         {{ _n( '%{n} apple', '%{n} apples', n, {n:''+n}) }}
     </span>
     <div>
