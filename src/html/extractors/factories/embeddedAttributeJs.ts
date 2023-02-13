@@ -9,13 +9,13 @@ export function embeddedAttributeJsExtractor(filter: null | string | AttributePr
     Validate.required.argument({ jsParser });
     let test: AttributePredicate = attr => true;
     if (typeof filter === 'string') {
-        const namePattern = filter
+        const namePattern = filter;
         test = (attr: Attribute) => {
-            if (attr.name.match(namePattern)) { return true }
-            return false
-        }
+            if (attr.name.match(namePattern)) { return true; }
+            return false;
+        };
     } else if (typeof filter === 'function') {
-        test = filter
+        test = filter;
     }
 
     return (node: Node, fileName: string, _, lineNumberStart) => {
