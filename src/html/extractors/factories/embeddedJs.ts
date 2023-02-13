@@ -1,15 +1,9 @@
 import { JsParser } from '../../../js/parser';
-import { Validate } from '../../../utils/validate';
-import { Element, IHtmlExtractorFunction, Node } from '../../parser';
+import { IHtmlExtractorFunction, Element, Node } from '../../parser';
 import { ElementSelectorSet } from '../../selector';
 import { HtmlUtils } from '../../utils';
+import { Validate } from '../../../utils/validate';
 
-/**
- * embeddedJsExtractor extractor messages from element content,
- * but treat them as embedded js:
- *
- *     <span>{{ gettext('msgid') }}</span>
- */
 export function embeddedJsExtractor(selector: string, jsParser: JsParser): IHtmlExtractorFunction {
     Validate.required.nonEmptyString({ selector });
     Validate.required.argument({ jsParser });
