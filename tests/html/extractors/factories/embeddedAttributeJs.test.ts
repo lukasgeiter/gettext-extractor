@@ -20,16 +20,14 @@ describe('HTML: Attribute Value as Embedded JS Extractor', () => {
         });
 
         test('single line', () => {
-            htmlParser.parseString(`<span :title="__('msg id')">content</span>`, 'foo.html');
-
+            htmlParser.parseString(`<span :title="__('msg id')" title="__('another')">content</span>`, 'foo.html');
             expect(jsParserMock.parseString).toHaveBeenCalledWith(`__('msg id')`, 'foo.html', {
                 lineNumberStart: 1
             });
         });
 
         test('with lineNumberStart option', () => {
-            htmlParser.parseString(`<span :title="__('msg id')">content</span>`, 'foo.html', { lineNumberStart: 10 });
-
+            htmlParser.parseString(`<span :title="__('msg id')" :class="abc">content</span>`, 'foo.html', { lineNumberStart: 10 });
             expect(jsParserMock.parseString).toHaveBeenCalledWith(`__('msg id')`, 'foo.html', {
                 lineNumberStart: 10
             });
