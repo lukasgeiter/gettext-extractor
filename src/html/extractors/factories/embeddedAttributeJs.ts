@@ -5,17 +5,14 @@ import { Element, IHtmlExtractorFunction, Node } from '../../parser';
 
 export type AttributePredicate = (attribute: Attribute) => boolean;
 
-export function embeddedAttributeJsExtractor(jsParser: JsParser, filter: null | string | AttributePredicate): IHtmlExtractorFunction {
+export function embeddedAttributeJsExtractor(filter: RegExp | AttributePredicate, jsParser: JsParser,): IHtmlExtractorFunction {
+    Validate.required.argument({ filter });
     Validate.required.argument({ jsParser });
-    let test: AttributePredicate = attr => true;
-    if (typeof filter === 'string') {
-        const namePattern = filter;
-        test = (attr: Attribute) => {
-            if (attr.name.match(namePattern)) { return true; }
-            return false;
-        };
-    } else if (typeof filter === 'function') {
+    let test: AttributePredicate;
+    if (typeof filter === 'function') {
         test = filter;
+    } else {
+        test = attr => filter.test(attr.name);
     }
 
     return (node: Node, fileName: string, _, lineNumberStart) => {

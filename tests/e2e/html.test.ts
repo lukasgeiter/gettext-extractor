@@ -68,8 +68,8 @@ describe('HTML E2E', () => {
             JsExtractors.callExpression('_xn', { arguments: { context: 0, text: 1, textPlural: 2 } }),
         ]);
         const htmlParser = extractor.createHtmlParser([
-            HtmlExtractors.embeddedAttributeJs(jsParser, '^:'),
-            HtmlExtractors.embeddedJs('*', jsParser),
+            HtmlExtractors.embeddedAttributeJs(/:title/, jsParser),
+            HtmlExtractors.embeddedJs('script', jsParser),
         ]);
         htmlParser.parseFile('tests/e2e/fixtures/html/linenumberStart.html', { lineNumberStart: 11 });
         expect(extractor.getPotString())

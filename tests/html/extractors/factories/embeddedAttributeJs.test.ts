@@ -15,7 +15,7 @@ describe('HTML: Attribute Value as Embedded JS Extractor', () => {
             };
 
             htmlParser = new HtmlParser(undefined!, [
-                embeddedAttributeJsExtractor(jsParserMock, ':title')
+                embeddedAttributeJsExtractor(/:title/, jsParserMock,)
             ]);
         });
 
@@ -37,9 +37,14 @@ describe('HTML: Attribute Value as Embedded JS Extractor', () => {
 
     describe('argument validation', () => {
 
-        test('selector: (none)', () => {
+        test('filter: (none)', () => {
             expect(() => {
                 (<any>embeddedAttributeJsExtractor)();
+            }).toThrowError(`Missing argument 'filter'`);
+        });
+        test('jsParser: (none)', () => {
+            expect(() => {
+                (<any>embeddedAttributeJsExtractor)(/:title/);
             }).toThrowError(`Missing argument 'jsParser'`);
         });
 
