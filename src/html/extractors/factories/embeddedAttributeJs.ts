@@ -5,7 +5,7 @@ import { Element, IHtmlExtractorFunction, Node } from '../../parser';
 
 export type AttributePredicate = (attribute: Attribute) => boolean;
 
-export function embeddedAttributeJsExtractor(filter: RegExp | AttributePredicate, jsParser: JsParser,): IHtmlExtractorFunction {
+export function embeddedAttributeJsExtractor(filter: RegExp | AttributePredicate, jsParser: JsParser): IHtmlExtractorFunction {
     Validate.required.argument({ filter });
     Validate.required.argument({ jsParser });
     let test: AttributePredicate;
