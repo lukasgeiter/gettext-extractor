@@ -7,6 +7,7 @@ describe('HTML: Attribute Value as Embedded JS Extractor', () => {
     describe('calling js parser', () => {
 
         let htmlParser: HtmlParser,
+            htmlAttrParser: HtmlParser,
             jsParserMock: JsParser;
 
         beforeEach(() => {
@@ -16,6 +17,9 @@ describe('HTML: Attribute Value as Embedded JS Extractor', () => {
 
             htmlParser = new HtmlParser(undefined!, [
                 embeddedAttributeJsExtractor(/:title/, jsParserMock,)
+            ]);
+            htmlAttrParser = new HtmlParser(undefined!, [
+                embeddedAttributeJsExtractor(e => { return e.name.startsWith(':') }, jsParserMock,)
             ]);
         });
 
@@ -33,6 +37,11 @@ describe('HTML: Attribute Value as Embedded JS Extractor', () => {
             });
         });
 
+        test('filter attr', () => {
+            htmlAttrParser.parseString(`<span :title="__('title')" class="title">Hello</span>`, 'foo.html');
+            expect(jsParserMock.parseString).toHaveBeenCalledWith(`__('title')`, 'foo.html', { lineNumberStart: 1 });
+        })
+
     });
 
     describe('argument validation', () => {
@@ -47,6 +56,5 @@ describe('HTML: Attribute Value as Embedded JS Extractor', () => {
                 (<any>embeddedAttributeJsExtractor)(/:title/);
             }).toThrowError(`Missing argument 'jsParser'`);
         });
-
     });
 });
