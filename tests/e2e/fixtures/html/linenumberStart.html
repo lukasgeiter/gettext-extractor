@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="app.js"></script>
+</head>
+
+<body>
+    <div class="app-container" :title="_xn('title', '%{n} apple', '%{n} apples', n, {n:''+n})"
+        data-name="__('whatever')"></div>
+    <script>
+        console.log(__('msg 1'));
+        console.log(_n('%{n} apple', '%{n} apples', n, { n: '' + n }));
+        console.log(__('msg 2'));
+    </script>
+</body>
+
+</html>

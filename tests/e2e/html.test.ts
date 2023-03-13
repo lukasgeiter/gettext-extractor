@@ -1,5 +1,5 @@
-import { GettextExtractor, HtmlExtractors, JsExtractors } from '../../dist';
 import * as fs from 'fs';
+import { GettextExtractor, HtmlExtractors, JsExtractors } from '../../dist';
 
 describe('HTML E2E', () => {
 
@@ -59,4 +59,21 @@ describe('HTML E2E', () => {
 
         expect(extractor.getPotString()).toBe(fs.readFileSync(__dirname + '/fixtures/html/embeddedJs.expected.pot').toString());
     });
+
+    test('line number start 11', () => {
+        const extractor = new GettextExtractor();
+        const jsParser = extractor.createJsParser([
+            JsExtractors.callExpression('__', { arguments: { text: 0, } }),
+            JsExtractors.callExpression('_n', { arguments: { text: 0, textPlural: 1 } }),
+            JsExtractors.callExpression('_xn', { arguments: { context: 0, text: 1, textPlural: 2 } }),
+        ]);
+        const htmlParser = extractor.createHtmlParser([
+            HtmlExtractors.embeddedAttributeJs(/:title/, jsParser),
+            HtmlExtractors.embeddedJs('script', jsParser),
+        ]);
+        htmlParser.parseFile('tests/e2e/fixtures/html/linenumberStart.html', { lineNumberStart: 11 });
+        expect(extractor.getPotString())
+            .toBe(fs.readFileSync(__dirname + '/fixtures/html/linenumberStart.expected.pot').toString())
+    });
+
 });
