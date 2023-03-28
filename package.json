@@ -38,7 +38,7 @@
         "glob": "5 - 7",
         "parse5": "5 - 6",
         "pofile": "1.0.x",
-        "typescript": "2 - 4"
+        "typescript": "2 - 5"
     },
     "devDependencies": {
         "@types/jest": "^26.0.14",
