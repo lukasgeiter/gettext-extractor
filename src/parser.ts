@@ -100,7 +100,7 @@ export abstract class Parser<TExtractorFunction extends Function, TParseOptions 
         Validate.optional.object({globOptions});
         this.validateParseOptions(options);
 
-        for (let fileName of glob.sync(pattern, globOptions)) {
+        for (let fileName of glob.sync(pattern, { ...globOptions, nodir: true })) {
             this.parseFile(fileName, options);
         }
 
