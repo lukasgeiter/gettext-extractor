@@ -8,7 +8,7 @@ function htmlTemplateExtractor(htmlParser) {
     return (node, sourceFile) => {
         if (node.kind === ts.SyntaxKind.NoSubstitutionTemplateLiteral) {
             const source = node.getText(sourceFile);
-            const lineNumber = sourceFile.getLineAndCharacterOfPosition(node.getStart());
+            const lineNumber = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile));
             htmlParser.parseString(source, sourceFile.fileName, { lineNumberStart: lineNumber.line });
         }
     };
