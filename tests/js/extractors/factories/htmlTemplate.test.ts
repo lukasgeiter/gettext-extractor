@@ -28,10 +28,12 @@ describe('JS: HTML template extractor', () => {
       ]);
 
       htmlParser = new HtmlParser(builder, [
-        (node, fileName, addMessage) => {
+        (node, fileName, _, lineNumberStart) => {
           if (node.nodeName === '#text') {
             const textNode = node as DefaultTreeTextNode;
-            innerJsParser.parseString(textNode.value, fileName, { lineNumberStart: textNode.sourceCodeLocation?.startLine });
+            const startLineFromNode = textNode.sourceCodeLocation?.startLine;
+            const lineNumber = startLineFromNode ? lineNumberStart + startLineFromNode - 1 : lineNumberStart;
+            innerJsParser.parseString(textNode.value, fileName, { lineNumberStart: lineNumber });
           }
         }
       ]);
@@ -42,7 +44,14 @@ describe('JS: HTML template extractor', () => {
     });
 
     test('HTML inside a template literal', () => {
-      outerJsParser.parseString(`let tuce = \`
+      outerJsParser.parseString(`
+      #
+      #
+      #
+      #
+      #
+      #
+      let tuce = \`
           <div>
               {{ service.getText('First level') }}
               <div>
@@ -50,20 +59,22 @@ describe('JS: HTML template extractor', () => {
                   <div> {{ service.getText('Third level') }} </div>
               </div>
           </div>\`
-      `)
+      `, 'test')
 
       expect(messages).toEqual([
         {
-          text: 'First level'
+          text: 'First level',
+          references: ['test:9'],
         },
         {
-          text: 'Second level'
+          text: 'Second level',
+          references: ['test:11'],
         },
         {
-          text: 'Third level'
+          text: 'Third level',
+          references: ['test:12'],
         },
       ])
     })
-
   })
 })

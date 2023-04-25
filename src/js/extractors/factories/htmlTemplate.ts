@@ -10,9 +10,8 @@ export function htmlTemplateExtractor(htmlParser: HtmlParser): IJsExtractorFunct
   return (node: ts.Node, sourceFile: ts.SourceFile) => {
     if (node.kind === ts.SyntaxKind.NoSubstitutionTemplateLiteral) {
       const source = node.getText(sourceFile);
-      const lineNumber = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile));
-
-      htmlParser.parseString(source, sourceFile.fileName, { lineNumberStart: lineNumber.line });
+      const location = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile));
+      htmlParser.parseString(source, sourceFile.fileName, { lineNumberStart: location.line });
     }
   };
 }
