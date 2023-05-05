@@ -128,6 +128,31 @@ describe('JS: Call Expression Extractor', () => {
                 ]);
             });
 
+            test('HTML inside a template string with substitution', () => {
+                parser.parseString(`
+                let tuce = \`
+                    <div>
+                        \${service.getText('First level')}
+                        <div>
+                            \${service.getText('Second level')}
+                            <div> \${service.getText('Third level')} </div>
+                        </div>
+                    </div>\`
+                `);
+
+                expect(messages).toEqual([
+                    {
+                        text: 'First level',
+                    },
+                    {
+                        text: 'Second level',
+                    },
+                    {
+                        text: 'Third level',
+                    },
+                ])
+            });
+
             test('concatenated srings', () => {
                 parser.parseString('service.getText("Foo " + \'bar \' + `template literal`);');
                 parser.parseString(`service.getText('Foo' + variable);`);

@@ -8,7 +8,7 @@ export function htmlTemplateExtractor(htmlParser: HtmlParser): IJsExtractorFunct
   Validate.required.argument({ htmlParser });
 
   return (node: ts.Node, sourceFile: ts.SourceFile) => {
-    if (node.kind === ts.SyntaxKind.NoSubstitutionTemplateLiteral) {
+    if (ts.isStringLiteralLike(node)) {
       const source = node.getText(sourceFile);
       const location = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile));
       htmlParser.parseString(source, sourceFile.fileName, { lineNumberStart: location.line });
