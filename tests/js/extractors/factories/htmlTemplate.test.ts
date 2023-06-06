@@ -29,14 +29,62 @@ describe('JS: HTML template extractor', () => {
       ]);
     });
 
-    test('HTML inside a template literal', () => {
+    test('single line (regular string)', () => {
+      jsParser.parseString("let itBe = \"<div> <translate> test </translate> </div>\"");
+      expect(messages).toEqual([
+        {
+          text: 'test'
+        }
+      ])
+    });
+
+    test('single line (template string)', () => {
+      jsParser.parseString("let itBe = \"<div> <translate> test </translate> </div>\"");
+      expect(messages).toEqual([
+        {
+          text: 'test'
+        }
+      ])
+    });
+
+    test('with lineNumberStart option (regular string)', () => {
+      jsParser.parseString(
+        "let itBe = \"<div> <translate> test </translate> </div>\"",
+        'test',
+        { lineNumberStart: 10 }
+      );
+
+      expect(messages).toEqual([
+        {
+          text: 'test',
+          references: ['test:10'],
+        },
+      ])
+    })
+
+    test('with lineNumberStart option (template string)', () => {
+      jsParser.parseString(
+        `let itBe = \"<div> <translate> test </translate> </div>\"`,
+        'test',
+        { lineNumberStart: 10 }
+      );
+
+      expect(messages).toEqual([
+        {
+          text: 'test',
+          references: ['test:10'],
+        },
+      ])
+    })
+
+    test('HTML inside a template literal with the correct line numbers', () => {
       jsParser.parseString(`
-      #
-      #
-      #
-      #
-      #
-      #
+       
+       
+       
+       
+       
+       
       let tuce = \`
           <div>
               <translate> First level </translate>
@@ -50,15 +98,49 @@ describe('JS: HTML template extractor', () => {
       expect(messages).toEqual([
         {
           text: 'First level',
-          references: ['test:9'],
+          references: ['test:10'],
         },
         {
           text: 'Second level',
-          references: ['test:11'],
+          references: ['test:12'],
         },
         {
           text: 'Third level',
-          references: ['test:12'],
+          references: ['test:13'],
+        },
+      ])
+    })
+
+    test('HTML inside a template literal with correct line numbers and with lineNumberStart', () => {
+      jsParser.parseString(`
+
+
+
+
+
+
+      let tuce = \`
+          <div>
+              <translate> First level </translate>
+              <div>
+                  <translate> Second level </translate>
+                  <div> <translate> Third level </translate> </div>
+              </div>
+          </div>\`
+      `, 'test', { lineNumberStart: 10 })
+
+      expect(messages).toEqual([
+        {
+          text: 'First level',
+          references: ['test:19'],
+        },
+        {
+          text: 'Second level',
+          references: ['test:21'],
+        },
+        {
+          text: 'Third level',
+          references: ['test:22'],
         },
       ])
     })
