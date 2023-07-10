@@ -30,7 +30,7 @@ describe('JS: HTML template extractor', () => {
     });
 
     test('single line (regular string)', () => {
-      jsParser.parseString("let itBe = \"<div> <translate> test </translate> </div>\"");
+      jsParser.parseString('let itBe = "<div> <translate> test </translate> </div>"');
       expect(messages).toEqual([
         {
           text: 'test'
@@ -39,7 +39,7 @@ describe('JS: HTML template extractor', () => {
     });
 
     test('single line (template string)', () => {
-      jsParser.parseString("let itBe = \"<div> <translate> test </translate> </div>\"");
+      jsParser.parseString('let itBe = "<div> <translate> test </translate> </div>"');
       expect(messages).toEqual([
         {
           text: 'test'
@@ -49,7 +49,7 @@ describe('JS: HTML template extractor', () => {
 
     test('with lineNumberStart option (regular string)', () => {
       jsParser.parseString(
-        "let itBe = \"<div> <translate> test </translate> </div>\"",
+        'let itBe = "<div> <translate> test </translate> </div>"',
         'test',
         { lineNumberStart: 10 }
       );
@@ -64,7 +64,7 @@ describe('JS: HTML template extractor', () => {
 
     test('with lineNumberStart option (template string)', () => {
       jsParser.parseString(
-        `let itBe = \"<div> <translate> test </translate> </div>\"`,
+        'let itBe = "<div> <translate> test </translate> </div>"',
         'test',
         { lineNumberStart: 10 }
       );

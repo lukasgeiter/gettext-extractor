@@ -3,7 +3,7 @@ import * as ts from 'typescript';
 import { Parser, IAddMessageCallback, IParseOptions } from '../parser';
 import { IMessage } from '../builder';
 
-export type IJsExtractorFunction = (node: ts.Node, sourceFile: ts.SourceFile, addMessage: IAddMessageCallback, lineNumberStart?: number) => void;
+export type IJsExtractorFunction = (node: ts.Node, sourceFile: ts.SourceFile, addMessage: IAddMessageCallback, lineNumberStart: number) => void;
 
 export interface IJsParseOptions extends IParseOptions {
     scriptKind?: ts.ScriptKind;
