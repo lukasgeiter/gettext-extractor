@@ -3,7 +3,7 @@ import * as ts from 'typescript';
 import { Parser, IAddMessageCallback, IParseOptions } from '../parser';
 import { IMessage } from '../builder';
 
-export type IJsExtractorFunction = (node: ts.Node, sourceFile: ts.SourceFile, addMessage: IAddMessageCallback) => void;
+export type IJsExtractorFunction = (node: ts.Node, sourceFile: ts.SourceFile, addMessage: IAddMessageCallback, lineNumberStart: number) => void;
 
 export interface IJsParseOptions extends IParseOptions {
     scriptKind?: ts.ScriptKind;
@@ -24,7 +24,7 @@ export class JsParser extends Parser<IJsExtractorFunction, IJsParseOptions> {
         });
 
         for (let extractor of this.extractors) {
-            extractor(node, sourceFile, addMessageCallback);
+            extractor(node, sourceFile, addMessageCallback, lineNumberStart);
         }
 
         ts.forEachChild(node, n => {
