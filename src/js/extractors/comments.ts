@@ -72,6 +72,7 @@ export abstract class JsCommentUtils {
             case ts.SyntaxKind.ThrowStatement:
             case ts.SyntaxKind.ExpressionStatement:
             case ts.SyntaxKind.ParenthesizedExpression:
+            case ts.SyntaxKind.BinaryExpression:
                 return this.getExtractionPositions(node.parent, sourceFile);
 
             case ts.SyntaxKind.VariableDeclaration:

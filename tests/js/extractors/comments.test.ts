@@ -214,7 +214,7 @@ describe('JS: comments', () => {
             });
         });
 
-        describe('variable assignment', () => {
+        describe('variable declaration', () => {
 
             test('single variable', () => {
                 check(`
@@ -350,6 +350,16 @@ describe('JS: comments', () => {
                         });
                     });
                 });
+            });
+        });
+
+        test('variable assignment', () => {
+            check(`
+                // Relevant leading line comment
+                foo = getText('Foo'); // Relevant trailing line comment
+            `, {
+                otherLineLeading: ['Relevant leading line comment'],
+                sameLineTrailing: ['Relevant trailing line comment']
             });
         });
 
