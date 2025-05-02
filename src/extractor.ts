@@ -90,7 +90,7 @@ export class GettextExtractor {
         Validate.required.nonEmptyString({fileName});
         Validate.optional.object({headers});
 
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             fs.writeFile(fileName, this.getPotString(headers), (error) => {
                 if (error) {
                     return reject(error);
