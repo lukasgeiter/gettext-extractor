@@ -50,7 +50,7 @@ export class ElementSelectorSet {
             let result = parser.parse(selectorString);
             selectors = result.type === 'selectors' ? result.selectors : [result];
         } catch (e) {
-            throw new Error(`Error parsing selector string: ${e.message}`);
+            throw new Error(`Error parsing selector string: ${(e as Error).message}`);
         }
 
         for (let s of selectors) {
